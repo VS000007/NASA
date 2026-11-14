@@ -3774,6 +3774,272 @@ model-viewer {
   color: #030712;
 }
 
+/* Voice Gender Switcher */
+.story-voice-gender-wrap {
+  display: flex;
+  align-items: center;
+}
+.btn-voice-gender-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(236, 72, 153, 0.4);
+  color: #f472b6;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-voice-gender-pill:hover {
+  background: rgba(236, 72, 153, 0.28);
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.4);
+  transform: translateY(-1px);
+}
+.btn-voice-gender-pill.active-female {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(168, 85, 247, 0.3));
+  border-color: #ec4899;
+  color: #fbcfe8;
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.3);
+}
+.btn-voice-gender-pill.active-male {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(14, 165, 233, 0.3));
+  border-color: #3b82f6;
+  color: #bae6fd;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+.voice-indicator-pill {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+}
+.voice-indicator-pill.voice-female {
+  background: rgba(236, 72, 153, 0.2);
+  color: #f472b6;
+  border: 1px solid rgba(236, 72, 153, 0.35);
+}
+.voice-indicator-pill.voice-male {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+/* Soundboard Toolbar */
+.story-soundboard-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(3, 7, 18, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 12px;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+}
+.sfx-bar-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  white-space: nowrap;
+}
+.sfx-buttons-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.sfx-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.sfx-btn:hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: var(--accent-cyan);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+/* Click-to-Speak Read-Along Sentence */
+.teleprompter-sentence {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+.teleprompter-sentence:hover {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fef08a;
+  text-decoration: underline;
+}
+.teleprompter-sentence.active-spoken {
+  background: rgba(236, 72, 153, 0.35);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.4);
+}
+
+/* Beat Decision Challenge Card */
+.story-challenge-card {
+  margin-top: 1.25rem;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+}
+.challenge-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.challenge-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.challenge-title-group strong {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.challenge-title-group span {
+  font-size: 0.9rem;
+  color: #f1f5f9;
+  font-weight: 600;
+}
+.challenge-options-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.challenge-opt-btn {
+  background: rgba(3, 7, 18, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.challenge-opt-btn:hover {
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.35);
+  color: #fff;
+}
+.challenge-opt-btn.selected.correct {
+  background: rgba(34, 197, 94, 0.25);
+  border-color: #22c55e;
+  color: #86efac;
+  font-weight: 700;
+}
+.challenge-opt-btn.selected.incorrect {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #fca5a5;
+  font-weight: 700;
+}
+.challenge-feedback-box {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  animation: fadeIn 0.3s ease;
+}
+.challenge-feedback-box.feedback-success {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #bbf7d0;
+}
+.challenge-feedback-box.feedback-warning {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fef08a;
+}
+.feedback-badge {
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  font-size: 0.85rem;
+}
+
+/* Secret Dossier & Artifact File Drawer */
+.story-dossier-card {
+  margin-top: 1rem;
+  background: rgba(3, 7, 18, 0.5);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.btn-toggle-dossier {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: #fbbf24;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.btn-toggle-dossier:hover {
+  background: rgba(245, 158, 11, 0.12);
+}
+.dossier-drawer-content {
+  padding: 0.75rem 1.25rem 1.25rem;
+  border-top: 1px dashed rgba(245, 158, 11, 0.25);
+  animation: slideDown 0.25s ease;
+}
+.dossier-drawer-content h4 {
+  font-size: 0.88rem;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+.dossier-fact-text {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+.dossier-telemetry-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.75);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.dossier-telemetry-pill .pill-label {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+#dossier-telemetry-val {
+  color: #94a3b8;
+  font-family: monospace;
+}
+
 
 /* ===================== 2. "HOW IT WORKED" INTERACTIVE LAB ===================== */
 .interactive-lab-overlay {
