@@ -46,10 +46,22 @@
 
     <div class="hud-actions">
       <button id="btn-explore-moon" class="btn-glass btn-moon" title="Jump to the Moon">
-        <span>🌕</span> Explore Moon <span id="header-moon-count" style="opacity:0.85; font-size:0.8em;">(45 Relics)</span>
+        <span>🌕</span> Moon <span id="header-moon-count" style="opacity:0.85; font-size:0.8em;">(47 Relics)</span>
       </button>
       <button id="btn-explore-mars" class="btn-glass btn-mars" title="Jump to Mars">
-        <span>🔴</span> Explore Mars <span id="header-mars-count" style="opacity:0.85; font-size:0.8em;">(17 Relics)</span>
+        <span>🔴</span> Mars <span id="header-mars-count" style="opacity:0.85; font-size:0.8em;">(19 Relics)</span>
+      </button>
+      <button id="btn-open-story-room" class="btn-glass btn-story-room-glow" onclick="window.openStoryMode()" title="Enter Interactive Voice Storytelling Room">
+        <span>🎙️</span> Story Mode
+      </button>
+      <button id="btn-open-interactive-lab" class="btn-glass" onclick="window.openInteractiveLab()" title="Open 'How It Worked' Physics Lab">
+        <span>🔬</span> How It Worked
+      </button>
+      <button id="btn-open-forgotten-explorers" class="btn-glass" onclick="window.openForgottenExplorers()" title="View Forgotten Explorers vs Still Working Ledger">
+        <span>🏛️</span> Relics Ledger
+      </button>
+      <button id="btn-open-mission-manual" class="btn-glass btn-manual-glow" onclick="window.openMissionManual()" title="Open Mission Manual & 3-Minute Guided Tour">
+        <span>🧭</span> Manual & Tour
       </button>
     </div>
   </header>
@@ -118,6 +130,13 @@
           <button id="btn-switch-moon" class="active">🌕 Moon</button>
           <button id="btn-switch-mars">🔴 Mars</button>
         </div>
+
+        <button class="btn-glass btn-story-room-glow" onclick="window.openStoryMode()" title="Open Voice Storytelling Room" style="font-size:0.8rem; padding:0.4rem 0.8rem;">
+          <span>🎙️</span> Story Mode
+        </button>
+        <button class="btn-glass btn-manual-glow" onclick="window.openMissionManual()" title="Manual & Guided Tour" style="font-size:0.8rem; padding:0.4rem 0.8rem;">
+          <span>🧭</span> Tour
+        </button>
       </div>
     </div>
 
@@ -190,6 +209,9 @@
       </div>
 
       <div class="object-hud-right">
+        <button id="btn-obj-launch-story-mode" class="btn-glass btn-story-room-glow" onclick="if(window.objectViewer?.currentObject) window.launchStoryForObject(window.objectViewer.currentObject.id)" title="Enter Voice Storytelling Room" style="font-size:0.85rem; padding:0.5rem 0.9rem;">
+          <span>🎙️</span> Story Room
+        </button>
         <div class="reading-level-box">
           <span id="reading-level-label">Reading Level: Explorer (Ages 7–10)</span>
           <button id="btn-reading-toggle" class="toggle-switch-btn" title="Switch reading level">
@@ -378,6 +400,10 @@
   <script src="/js/object_viewer.js"></script>
   <script src="/js/accessibility.js"></script>
   <script src="/js/media_panel.js"></script>
+  <script src="/js/story_mode.js"></script>
+  <script src="/js/interactive_lab.js"></script>
+  <script src="/js/guided_tour.js"></script>
+  <script src="/js/forgotten_explorers.js"></script>
 
 </body>
 </html>

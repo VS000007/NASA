@@ -34,8 +34,8 @@ class SolarSystemNavigator {
     this.isWarping = false;
 
     this.artifactCounts = {
-      'Moon': { count: 45, label: 'Apollo 11, Lunar Rovers, Surveyors & ALSEPs' },
-      'Mars': { count: 17, label: 'Viking, Pathfinder, Opportunity & Jezero Hardware' }
+      'Moon': { count: 47, label: 'Apollo 11, Lunar Rovers, Surveyors & ALSEPs' },
+      'Mars': { count: 19, label: 'Viking, Pathfinder, Opportunity, Curiosity & Jezero Hardware' }
     };
 
     this.init();

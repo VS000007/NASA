@@ -2,6 +2,28 @@
 
 All notable changes to the Space Archaeologists project.
 
+## [2.1.0] — 2026-11-14
+
+### ✨ Flagship Interactive Features
+- **🎙️ Voice Storytelling Room**:
+  - Implements the strict 5-Beat narrative arc (Launch, Journey & How It Worked, Challenge, Discovery, Legacy).
+  - 5 selectable character perspectives: The Robot, The Engineer, The Scientist, Mission Control, Future Explorer.
+  - 3 audience age bands: Cadet (6-8), Explorer (9-11), Commander (12-14) with real-time vocabulary and depth scaling.
+  - SpeechSynthesis voice narration with teleprompter sentence highlighting, audio waveform equalizer, and Web Audio telemetry hum/beeps.
+- **🔬 "How It Worked" Interactive Lab**:
+  - Opportunity Solar & Dust Storm Simulator (Dust Tau vs Watts vs Battery cold freeze).
+  - Sky Crane 4-Stage Entry Sequence (Heatshield -> Supersonic Parachute -> Powered Descent Thrusters -> Tether Lowering & Flyaway).
+  - Apollo Lunar Retroreflector Laser Ranging Simulator (Nanosecond speed-of-light timing proving 3.8 cm/yr recession).
+  - Ingenuity Martian Aerodynamics Lab (Earth 100% atmosphere vs Mars 1% thin air with 2,400 RPM coaxial rotors).
+- **🧭 Mission Manual & 3-Minute Guided Tour**:
+  - On-screen Mission Manual documenting all planetary maps, solar system telemetry, 3D models, and storytelling controls.
+  - Automated 7-stop 3-minute guided walkthrough tailored for judges and evaluators with auto-advance and step-by-step navigation.
+- **🏛️ Forgotten Explorers vs Still Working For Us Ledger**:
+  - Dual-column historical ledger comparing silent/crashed equipment (Opportunity, Spirit, InSight, Phoenix, Viking 1, Ranger 7) with active/passive instruments (Lunar retroreflectors, Perseverance, Curiosity, Ingenuity).
+- **🔧 Bug Fixes**:
+  - Fixed HTML quote injection in `surface_map.js` that caused broken quotation marks (`'''`) to appear on thumbnail cards.
+  - Upgraded header and surface HUD navigation bars with 1-click smooth access to all interactive rooms.
+
 ## [2.0.0] — 2026-11-14
 
 ### 🔴 Breaking Changes

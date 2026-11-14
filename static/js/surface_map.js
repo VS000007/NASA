@@ -479,9 +479,14 @@ class SurfaceMapController {
             <div class="site-item-meta">${obj.mission} • ${obj.year}</div>
             <div class="site-item-name" title="${obj.name}">${obj.name}</div>
           </div>
-          <button class="site-item-cta" onclick="window.openObjectPage('${obj.id}')" title="Inspect 3D model & archaeological story">
-            <span>🔍 Inspect</span>
-          </button>
+          <div class="site-item-btns">
+            <button class="site-item-cta" onclick="window.openObjectPage('${obj.id}')" title="Inspect 3D model & archaeological story">
+              <span>🔍 3D Inspect</span>
+            </button>
+            <button class="site-item-cta btn-popup-story" onclick="window.launchStoryForObject('${obj.id}')" title="Enter Voice Storytelling Room">
+              <span>🎙️ Story</span>
+            </button>
+          </div>
         </div>
       `;
     });
@@ -703,8 +708,8 @@ class SurfaceMapController {
     const activeCount = displayObjects.filter(o => o.year <= currentYear).length;
     const totalCount = displayObjects.length;
 
-    // SVG icon fallback for missing/slow imagery
-    const fallbackSvg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="%2300e5ff" stroke-width="1.5"><circle cx="12" cy="12" r="9" stroke="%2338bdf8" stroke-dasharray="3 3"/><path d="M12 7v5l3 3"/><circle cx="12" cy="12" r="3" fill="%2300e5ff"/><path d="M8 17l-3 3m11-3l3 3"/></svg>`;
+    // Safe SVG icon fallback for missing/slow imagery
+    const fallbackSvgDataUri = 'data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2280%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2300e5ff%22%20stroke-width%3D%221.5%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%20stroke%3D%22%2338bdf8%22%20stroke-dasharray%3D%223%203%22%2F%3E%3Cpath%20d%3D%22M12%207v5l3%203%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%223%22%20fill%3D%22%2300e5ff%22%2F%3E%3Cpath%20d%3D%22M8%2017l-3%203m11-3l3%203%22%2F%3E%3C%2Fsvg%3E';
 
     const heading = document.createElement('div');
     heading.className = 'tray-header-row';
@@ -745,7 +750,7 @@ class SurfaceMapController {
         card.innerHTML = `
           <div class="tray-card-top">
             <div class="tray-card-img">
-              <img src="${obj.image}" alt="${obj.name}" loading="lazy" onerror="this.src='${fallbackSvg}'">
+              <img src="${obj.image}" alt="${obj.name}" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSvgDataUri}'">
               ${!isLanded ? '<div class="locked-overlay"><span class="lock-icon">🔒</span><span class="lock-year">' + obj.year + '</span></div>' : modelBadge}
             </div>
             <div class="tray-card-info">
@@ -823,6 +828,17 @@ window.addEventListener('DOMContentLoaded', () => {
   window.openObjectPage = (objectId) => {
     console.log(`Opening object page for: ${objectId}`);
     window.dispatchEvent(new CustomEvent('open-object-page', { detail: { id: objectId } }));
+  };
+
+  window.launchStoryForObject = (objectId) => {
+    let hero = 'opportunity';
+    if (objectId.includes('apollo')) hero = 'apollo11';
+    else if (objectId.includes('perseverance') || objectId.includes('ingenuity')) hero = 'perseverance';
+    else if (objectId.includes('opportunity') || objectId.includes('spirit')) hero = 'opportunity';
+    
+    if (typeof window.openStoryMode === 'function') {
+      window.openStoryMode(hero);
+    }
   };
 
   // Support direct URL parameters for deep-linking (e.g. ?body=Moon or ?body=Mars or ?object=...)
