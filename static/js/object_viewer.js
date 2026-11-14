@@ -558,7 +558,7 @@ class ObjectViewerController {
   }
 
   stopVoice() {
-    if (this.synth) {
+    if (this.isSpeaking && this.synth) {
       this.synth.cancel();
     }
     this.isSpeaking = false;

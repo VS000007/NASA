@@ -1555,7 +1555,7 @@ class StoryModeController {
   }
 
   stopVoice() {
-    if (this.synth) {
+    if (this.isPlayingVoice && this.synth) {
       this.synth.cancel();
     }
     this.isPlayingVoice = false;
