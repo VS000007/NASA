@@ -4740,19 +4740,62 @@ model-viewer {
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 9999;
+  z-index: 99999 !important; /* Higher than any modal backdrop */
   width: 90vw;
-  max-width: 650px;
+  max-width: 680px;
   background: rgba(15, 23, 42, 0.96);
   border: 2px solid var(--accent-cyan);
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 229, 255, 0.35);
+  border-radius: 18px;
+  box-shadow: 0 12px 45px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 229, 255, 0.35);
   display: none;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .guided-tour-hud.active {
   display: block;
   animation: slideUpTour 0.3s ease;
 }
+.guided-tour-hud.minimized {
+  width: auto;
+  max-width: 90vw;
+  border-radius: 30px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--accent-cyan);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 229, 255, 0.4);
+}
+.guided-tour-hud.minimized .tour-hud-desc,
+.guided-tour-hud.minimized .tour-hud-bottom,
+.guided-tour-hud.minimized .tour-progress-bar {
+  display: none !important;
+}
+.guided-tour-hud.minimized .tour-hud-inner {
+  padding: 8px 16px;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+.guided-tour-hud.minimized #tour-step-title {
+  font-size: 0.9rem;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Tour Live Progress Bar */
+.tour-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+.tour-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00e5ff, #f59e0b);
+  box-shadow: 0 0 8px var(--accent-cyan);
+  transition: width 0.1s linear;
+}
+
 @keyframes slideUpTour {
   from { transform: translate(-50%, 40px); opacity: 0; }
   to { transform: translate(-50%, 0); opacity: 1; }
@@ -4784,12 +4827,38 @@ model-viewer {
   background: var(--accent-cyan);
   box-shadow: 0 0 8px var(--accent-cyan);
 }
+.tour-hud-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tour-hud-btn-mini {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tour-hud-btn-mini:hover {
+  background: rgba(0, 229, 255, 0.2);
+  color: #fff;
+  border-color: var(--accent-cyan);
+}
+.tour-hud-btn-mini.active-voice {
+  background: rgba(236, 72, 153, 0.25);
+  border-color: #ec4899;
+  color: #f472b6;
+}
 .tour-exit-btn {
   background: transparent;
   border: none;
   color: var(--text-secondary);
   cursor: pointer;
   font-size: 0.8rem;
+  padding: 4px 6px;
 }
 .tour-exit-btn:hover {
   color: #ef4444;
@@ -4818,12 +4887,20 @@ model-viewer {
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.82rem;
+  transition: all 0.2s ease;
+}
+.btn-tour-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 .btn-tour-next {
   background: var(--accent-cyan);
   color: #030712;
   font-weight: 700;
   border: none;
+}
+.btn-tour-next:hover {
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.6);
+  transform: translateY(-1px);
 }
 .btn-tour-autoplay {
   background: rgba(251, 191, 36, 0.15);
@@ -4834,6 +4911,30 @@ model-viewer {
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: 600;
+  transition: all 0.2s ease;
+}
+.btn-tour-autoplay:hover, .btn-tour-autoplay.playing {
+  background: rgba(251, 191, 36, 0.3);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
+}
+
+/* Marker Tray Hover Pulse & Relic Focus */
+.marker-tray-hover {
+  transform: scale(1.35) !important;
+  filter: drop-shadow(0 0 16px #00e5ff) !important;
+  z-index: 9999 !important;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tray-cards.grabbing {
+  cursor: grabbing !important;
+  user-select: none !important;
+}
+
+.tray-card.focused-relic {
+  border-color: var(--accent-cyan) !important;
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.6) !important;
+  transform: translateY(-4px) !important;
 }
 
 

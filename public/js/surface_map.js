@@ -31,6 +31,10 @@ class SurfaceMapController {
     this.selectedCategory = 'all';
     this.searchQuery = '';
 
+    // Relic Tray Persistent Cache
+    this.trayRenderedBody = null;
+    this.trayCardsMap = new Map();
+
     this.tileConfigs = {
       'Moon': {
         name: 'The Moon (Luna)',
@@ -687,16 +691,13 @@ class SurfaceMapController {
     }
 
     if (!tray) return;
-    tray.innerHTML = '';
 
     // Filter tray objects by category & search query
     const displayObjects = allObjects.filter(obj => {
-      // Category filter
       if (this.selectedCategory !== 'all') {
         const cat = (obj.category || '').toLowerCase();
         if (cat !== this.selectedCategory.toLowerCase()) return false;
       }
-      // Search filter
       if (this.searchQuery) {
         const q = this.searchQuery;
         const haystack = `${obj.name} ${obj.mission} ${obj.category} ${obj.what} ${obj.where} ${obj.site || ''}`.toLowerCase();
@@ -711,34 +712,32 @@ class SurfaceMapController {
     // Safe SVG icon fallback for missing/slow imagery
     const fallbackSvgDataUri = 'data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2280%22%20height%3D%2280%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2300e5ff%22%20stroke-width%3D%221.5%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%229%22%20stroke%3D%22%2338bdf8%22%20stroke-dasharray%3D%223%203%22%2F%3E%3Cpath%20d%3D%22M12%207v5l3%203%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%223%22%20fill%3D%22%2300e5ff%22%2F%3E%3Cpath%20d%3D%22M8%2017l-3%203m11-3l3%203%22%2F%3E%3C%2Fsvg%3E';
 
-    const heading = document.createElement('div');
-    heading.className = 'tray-header-row';
-    heading.innerHTML = `
-      <div class="tray-title-group">
-        <span class="tray-title-icon">🛰️</span>
-        <span class="tray-title-text">Discovered Relics on ${this.currentBody}</span>
-        <span class="tray-year-pill">(${currentYear})</span>
-        <span class="tray-count-pill">${activeCount} / ${totalCount} Discovered</span>
-      </div>
-      <div class="tray-nav-group">
-        <span class="tray-scroll-hint">‹ Scroll Catalog ›</span>
-        <button class="tray-nav-btn btn-tray-prev" title="Scroll Left" aria-label="Scroll left">‹</button>
-        <button class="tray-nav-btn btn-tray-next" title="Scroll Right" aria-label="Scroll right">›</button>
-      </div>
-    `;
-    tray.appendChild(heading);
+    // 1. Initial Build or Body Change: Construct DOM structure ONCE to preserve scroll & eliminate glitching
+    if (this.trayRenderedBody !== this.currentBody || !tray.querySelector('.tray-cards')) {
+      this.trayCardsMap = new Map();
+      tray.innerHTML = '';
 
-    const cardsContainer = document.createElement('div');
-    cardsContainer.className = 'tray-cards';
-
-    if (displayObjects.length === 0) {
-      cardsContainer.innerHTML = `
-        <div class="tray-empty-state">
-          <span>🔭</span> No artifacts match the current search or category filter.
+      const heading = document.createElement('div');
+      heading.className = 'tray-header-row';
+      heading.innerHTML = `
+        <div class="tray-title-group">
+          <span class="tray-title-icon">🛰️</span>
+          <span class="tray-title-text">Discovered Relics on ${this.currentBody}</span>
+          <span class="tray-year-pill" id="tray-year-pill">(${currentYear})</span>
+          <span class="tray-count-pill" id="tray-count-pill">${activeCount} / ${totalCount} Discovered</span>
+        </div>
+        <div class="tray-nav-group">
+          <span class="tray-scroll-hint">‹ Drag or Scroll Catalog ›</span>
+          <button class="tray-nav-btn btn-tray-prev" title="Scroll Left" aria-label="Scroll left">‹</button>
+          <button class="tray-nav-btn btn-tray-next" title="Scroll Right" aria-label="Scroll right">›</button>
         </div>
       `;
-    } else {
-      displayObjects.forEach((obj) => {
+      tray.appendChild(heading);
+
+      const cardsContainer = document.createElement('div');
+      cardsContainer.className = 'tray-cards';
+
+      allObjects.forEach((obj) => {
         const isLanded = (obj.year <= currentYear);
         const card = document.createElement('div');
         card.className = `tray-card ${isLanded ? 'active-relic' : 'locked-relic'}`;
@@ -751,7 +750,10 @@ class SurfaceMapController {
           <div class="tray-card-top">
             <div class="tray-card-img">
               <img src="${obj.image}" alt="${obj.name}" loading="lazy" onerror="this.onerror=null; this.src='${fallbackSvgDataUri}'">
-              ${!isLanded ? '<div class="locked-overlay"><span class="lock-icon">🔒</span><span class="lock-year">' + obj.year + '</span></div>' : modelBadge}
+              <div class="locked-overlay" style="display:${!isLanded ? 'flex' : 'none'};">
+                <span class="lock-icon">🔒</span><span class="lock-year">${obj.year}</span>
+              </div>
+              ${modelBadge}
             </div>
             <div class="tray-card-info">
               <div class="tray-card-badge-row">
@@ -766,7 +768,7 @@ class SurfaceMapController {
           </div>
           <div class="tray-card-actions">
             ${isLanded 
-              ? `<button class="tray-card-btn btn-inspect" title="Inspect 3D model & mission stories">
+              ? `<button class="tray-card-btn btn-inspect" title="Inspect 3D model, telemetry & mission stories">
                    <span>🔍 Inspect 3D Story</span>
                  </button>`
               : `<button class="tray-card-btn btn-fastforward" title="Jump timeline to ${obj.year} to land this relic">
@@ -776,47 +778,186 @@ class SurfaceMapController {
           </div>
         `;
 
-        if (isLanded) {
-          card.addEventListener('click', () => {
+        // Card Click Handler with drag detection
+        card.addEventListener('click', (e) => {
+          if (cardsContainer._hasDragged && cardsContainer._hasDragged()) return;
+          const isInspectBtn = e.target.closest('.btn-inspect');
+          const isJumpBtn = e.target.closest('.btn-fastforward');
+
+          if (isInspectBtn) {
+            e.stopPropagation();
             if (typeof window.openObjectPage === 'function') {
               window.openObjectPage(obj.id);
             }
-          });
-        } else {
-          card.addEventListener('click', () => {
+          } else if (isJumpBtn) {
+            e.stopPropagation();
             this.jumpToYear(obj.year, obj.name);
-          });
-        }
+          } else {
+            // Clicking card body focuses and flies to relic on map!
+            if (obj.year <= this.currentYear) {
+              this.focusRelicOnMap(obj);
+            } else {
+              this.jumpToYear(obj.year, obj.name);
+            }
+          }
+        });
 
+        // Hover highlight on map marker
+        card.addEventListener('mouseenter', () => this.highlightMarkerOnMap(obj, true));
+        card.addEventListener('mouseleave', () => this.highlightMarkerOnMap(obj, false));
+
+        this.trayCardsMap.set(obj.id, card);
         cardsContainer.appendChild(card);
       });
-    }
 
-    // Scroll navigation buttons
-    const prevBtn = heading.querySelector('.btn-tray-prev');
-    const nextBtn = heading.querySelector('.btn-tray-next');
-    if (prevBtn) {
-      prevBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        cardsContainer.scrollBy({ left: -320, behavior: 'smooth' });
-      });
-    }
-    if (nextBtn) {
-      nextBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        cardsContainer.scrollBy({ left: 320, behavior: 'smooth' });
-      });
-    }
+      // Kinetic Drag-to-Scroll support
+      this.setupTrayDragScroll(cardsContainer);
 
-    // Mouse wheel horizontal scroll support
-    cardsContainer.addEventListener('wheel', (e) => {
-      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault();
-        cardsContainer.scrollLeft += e.deltaY;
+      // Scroll navigation buttons
+      const prevBtn = heading.querySelector('.btn-tray-prev');
+      const nextBtn = heading.querySelector('.btn-tray-next');
+      if (prevBtn) {
+        prevBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          cardsContainer.scrollBy({ left: -320, behavior: 'smooth' });
+        });
       }
-    }, { passive: false });
+      if (nextBtn) {
+        nextBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          cardsContainer.scrollBy({ left: 320, behavior: 'smooth' });
+        });
+      }
 
-    tray.appendChild(cardsContainer);
+      // Mouse wheel horizontal scroll support
+      cardsContainer.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          cardsContainer.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+
+      tray.appendChild(cardsContainer);
+      this.trayRenderedBody = this.currentBody;
+    }
+
+    // 2. Incremental Smooth Update: Update status without DOM rebuild or scroll position reset
+    const yearPill = tray.querySelector('#tray-year-pill');
+    const countPill = tray.querySelector('#tray-count-pill');
+    if (yearPill) yearPill.textContent = `(${currentYear})`;
+    if (countPill) countPill.textContent = `${activeCount} / ${totalCount} Discovered`;
+
+    allObjects.forEach(obj => {
+      const card = this.trayCardsMap.get(obj.id);
+      if (!card) return;
+
+      // Filter check
+      const matches = displayObjects.some(o => o.id === obj.id);
+      card.style.display = matches ? 'flex' : 'none';
+
+      // State check
+      const isLanded = (obj.year <= currentYear);
+      const wasLanded = card.classList.contains('active-relic');
+
+      if (isLanded !== wasLanded) {
+        card.classList.toggle('active-relic', isLanded);
+        card.classList.toggle('locked-relic', !isLanded);
+
+        const statusTag = card.querySelector('.tray-status-tag');
+        if (statusTag) {
+          statusTag.className = `tray-status-tag ${isLanded ? 'tag-active' : 'tag-locked'}`;
+          statusTag.textContent = isLanded ? '● ACTIVE' : `⏳ ${obj.year}`;
+        }
+
+        const lockedOverlay = card.querySelector('.locked-overlay');
+        if (lockedOverlay) {
+          lockedOverlay.style.display = !isLanded ? 'flex' : 'none';
+        }
+
+        const actionsBox = card.querySelector('.tray-card-actions');
+        if (actionsBox) {
+          actionsBox.innerHTML = isLanded
+            ? `<button class="tray-card-btn btn-inspect" title="Inspect 3D model, telemetry & mission stories">
+                 <span>🔍 Inspect 3D Story</span>
+               </button>`
+            : `<button class="tray-card-btn btn-fastforward" title="Jump timeline to ${obj.year} to land this relic">
+                 <span>⚡ Jump to ${obj.year}</span>
+               </button>`;
+        }
+      }
+    });
+  }
+
+  setupTrayDragScroll(container) {
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let hasDragged = false;
+
+    container.addEventListener('mousedown', (e) => {
+      if (e.target.closest('button')) return;
+      isDown = true;
+      hasDragged = false;
+      container.classList.add('grabbing');
+      startX = e.pageX - container.offsetLeft;
+      scrollLeft = container.scrollLeft;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDown) return;
+      isDown = false;
+      container.classList.remove('grabbing');
+      setTimeout(() => { hasDragged = false; }, 80);
+    });
+
+    container.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 1.6;
+      if (Math.abs(walk) > 5) {
+        hasDragged = true;
+      }
+      container.scrollLeft = scrollLeft - walk;
+    });
+
+    container._hasDragged = () => hasDragged;
+  }
+
+  focusRelicOnMap(obj) {
+    if (!this.map) return;
+    this.map.flyTo([obj.lat, obj.lon], Math.max(this.map.getZoom(), 4), { duration: 0.8 });
+
+    // Open popup for this relic
+    const siteKey = obj.site || `${obj.lat.toFixed(1)},${obj.lon.toFixed(1)}`;
+    const group = this.siteGroups[siteKey] || Object.values(this.siteGroups).find(g => g.objects.some(o => o.id === obj.id));
+    if (group && group.marker) {
+      if (this.clusterGroup.hasLayer(group.marker)) {
+        setTimeout(() => group.marker.openPopup(), 450);
+      }
+    }
+
+    // Visual card pulse
+    const card = this.trayCardsMap?.get(obj.id);
+    if (card) {
+      document.querySelectorAll('.tray-card').forEach(c => c.classList.remove('focused-relic'));
+      card.classList.add('focused-relic');
+    }
+
+    if (typeof window.showSpaceToast === 'function') {
+      window.showSpaceToast(`📍 Focused on ${obj.name} in ${obj.site || obj.body}`, '🛰️', 2500);
+    }
+  }
+
+  highlightMarkerOnMap(obj, isHover) {
+    const siteKey = obj.site || `${obj.lat.toFixed(1)},${obj.lon.toFixed(1)}`;
+    const group = this.siteGroups[siteKey] || Object.values(this.siteGroups).find(g => g.objects.some(o => o.id === obj.id));
+    if (group && group.marker) {
+      const el = group.marker.getElement();
+      if (el) {
+        el.classList.toggle('marker-tray-hover', isHover);
+      }
+    }
   }
 }
 

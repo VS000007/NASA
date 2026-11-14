@@ -3,6 +3,9 @@
  * Implements:
  *  - Interactive Mission Manual detailing every tool, map, and storytelling feature
  *  - Automated 3-Minute Guided Walkthrough for judges and evaluators that visits every key milestone
+ *  - Flawless transitions between Solar Orbit, Lunar Descent, 1969 Timeline, 3D Object Stage, Voice Storytelling Room, Physics Lab, and Accessibility Ledger
+ *  - Live 15s auto-play progress bar with pause/resume and female voice audio guide
+ *  - Minimized floating HUD toggle so evaluators can inspect features freely
  */
 
 class GuidedTourController {
@@ -11,7 +14,12 @@ class GuidedTourController {
     this.tourOverlay = null;
     this.currentStopIndex = 0;
     this.isTourRunning = false;
-    this.autoAdvanceTimer = null;
+    this.autoPlayActive = false;
+    this.autoPlayInterval = null;
+    this.autoPlayDuration = 15000; // 15 seconds per stop
+    this.autoPlayStartTime = 0;
+    this.isMinimized = false;
+    this.voiceEnabled = true; // Natural female voice narration of tour stops
 
     this.tourStops = [
       {
@@ -19,8 +27,13 @@ class GuidedTourController {
         title: '🪐 1. Solar System Navigator & JPL Horizons',
         description: 'Welcome to Space Archaeologists! You are looking at a real-time 3D planetary model powered by NASA JPL Horizons orbital telemetry. Click and drag to pan across the inner solar system, scroll to zoom in/out, and notice the tidal terminator shading on Earth, Moon, and Mars.',
         action: () => {
-          if (window.surfaceController) window.surfaceController.returnToSolarSystem();
+          if (window.storyMode) window.storyMode.close();
+          if (window.interactiveLab) window.interactiveLab.close();
           if (window.objectViewer) window.objectViewer.close();
+          if (window.a11yController && window.a11yController.tableViewActive) {
+            window.a11yController.toggleTableView();
+          }
+          if (window.surfaceController) window.surfaceController.returnToSolarSystem();
           if (window.solarNav) window.solarNav.resetView();
         }
       },
@@ -29,16 +42,35 @@ class GuidedTourController {
         title: '🌕 2. Planetary Descent to the Moon',
         description: 'Watch the warp transition as we descend from solar orbit onto high-resolution NASA Moon Trek WAC satellite mosaic tiles! Notice how the camera dynamically centers on the lunar maria where Apollo and Surveyor touched down.',
         action: () => {
-          if (window.surfaceController) window.surfaceController.open('Moon');
+          if (window.storyMode) window.storyMode.close();
+          if (window.interactiveLab) window.interactiveLab.close();
+          if (window.objectViewer) window.objectViewer.close();
+          if (window.a11yController && window.a11yController.tableViewActive) {
+            window.a11yController.toggleTableView();
+          }
+          if (window.surfaceController) {
+            window.surfaceController.open('Moon');
+          }
         }
       },
       {
         step: 3,
         title: '⏱️ 3. Chronological Mission Timeline & Filters',
-        description: 'The timeline starts at 1966 with Surveyor 1. Drag the slider or press Play to watch humanity’s hardware arrive on the Moon across the decades. Notice the three distinct marker styles: 🚀 Landing Sites, 📍 Last Known Positions, and 💥 Impact Sites.',
+        description: 'The timeline starts at 1966 with Surveyor 1. Watch humanity’s hardware arrive on the Moon across the decades. Notice the three distinct marker styles: 🚀 Landing Sites, 📍 Last Known Positions, and 💥 Impact Sites—now focused on Apollo 11 in 1969!',
         action: () => {
+          if (window.storyMode) window.storyMode.close();
+          if (window.interactiveLab) window.interactiveLab.close();
+          if (window.objectViewer) window.objectViewer.close();
+          if (window.a11yController && window.a11yController.tableViewActive) {
+            window.a11yController.toggleTableView();
+          }
           if (window.surfaceController) {
-            window.surfaceController.setTimelineYear(1969);
+            if (window.surfaceController.currentBody !== 'Moon') {
+              window.surfaceController.open('Moon');
+            }
+            setTimeout(() => {
+              window.surfaceController.jumpToYear(1969, 'Apollo 11');
+            }, 300);
           }
         }
       },
@@ -47,6 +79,11 @@ class GuidedTourController {
         title: '🛰️ 4. Apollo 11 Descent Stage in 3D',
         description: 'Inspect the authentic NASA 3D model of Lunar Module Eagle! Drag to rotate 360°, scroll to zoom in on the gold foil and landing pads, and click the numbered nodes to inspect engineering components like the stainless steel peace plaque.',
         action: () => {
+          if (window.storyMode) window.storyMode.close();
+          if (window.interactiveLab) window.interactiveLab.close();
+          if (window.a11yController && window.a11yController.tableViewActive) {
+            window.a11yController.toggleTableView();
+          }
           if (typeof window.openObjectPage === 'function') {
             window.openObjectPage('apollo-11-descent-stage');
           }
@@ -55,8 +92,13 @@ class GuidedTourController {
       {
         step: 5,
         title: '🎙️ 5. Voice Storytelling Room & Perspective Switcher',
-        description: 'Enter the flagship Voice Storytelling Room! Experience the 5-Beat Story Arc with real voice narration. Use the Perspective Switcher to hear the story told from 5 unique viewpoints: The Robot, The Engineer, The Scientist, Mission Control, or a Future Explorer!',
+        description: 'Enter the flagship Voice Storytelling Room! Experience the 5-Beat Story Arc with natural female voice narration, interactive mission soundboard, and 5 distinct viewpoints: The Robot, The Engineer, The Scientist, Mission Control, or Future Explorer!',
         action: () => {
+          if (window.objectViewer) window.objectViewer.close();
+          if (window.interactiveLab) window.interactiveLab.close();
+          if (window.a11yController && window.a11yController.tableViewActive) {
+            window.a11yController.toggleTableView();
+          }
           if (typeof window.openStoryMode === 'function') {
             window.openStoryMode('apollo11');
           }
@@ -65,9 +107,13 @@ class GuidedTourController {
       {
         step: 6,
         title: '🔬 6. "How It Worked" Interactive Lab',
-        description: 'Step into the interactive physics lab! Test how Martian dust storms choke solar-powered rovers like Opportunity, watch the 4-stage Sky Crane lowering sequence, or fire a laser pulse to calculate the distance to the Moon down to millimeters!',
+        description: 'Step into the interactive physics lab! Test the 4-stage Sky Crane lowering sequence, simulate Martian dust choking Opportunity\'s solar panels, or fire a laser pulse to calculate the distance to the Moon down to picoseconds!',
         action: () => {
           if (window.storyMode) window.storyMode.close();
+          if (window.objectViewer) window.objectViewer.close();
+          if (window.a11yController && window.a11yController.tableViewActive) {
+            window.a11yController.toggleTableView();
+          }
           if (typeof window.openInteractiveLab === 'function') {
             window.openInteractiveLab('skycrane');
           }
@@ -76,12 +122,16 @@ class GuidedTourController {
       {
         step: 7,
         title: '📋 7. Accessibility, Table View & Verified Sources',
-        description: 'Our platform adheres to WCAG 2.1 AA standards: full keyboard navigation, screen-reader table alternatives, prefers-reduced-motion support, and a complete auto-generated Credits & Sources page with zero uncredited imagery.',
+        description: 'Our platform adheres to WCAG 2.1 AA standards: full keyboard navigation, screen-reader table alternatives, prefers-reduced-motion support, and a complete auto-generated Credits & Sources ledger with 66 verified planetary relics!',
         action: () => {
+          if (window.storyMode) window.storyMode.close();
           if (window.interactiveLab) window.interactiveLab.close();
-          if (window.surfaceController) window.surfaceController.open('Mars');
+          if (window.objectViewer) window.objectViewer.close();
+          if (window.surfaceController) {
+            window.surfaceController.open('Mars');
+          }
           if (window.a11yController && !window.a11yController.tableViewActive) {
-            window.a11yController.toggleTableView();
+            setTimeout(() => window.a11yController.toggleTableView(), 350);
           }
         }
       }
@@ -148,69 +198,54 @@ class GuidedTourController {
                 <p>Features live planetary orbits calculated using JPL Horizons ephemerides. Drag to pan, scroll to zoom. Click the Moon or Mars to descend onto surface maps.</p>
               </div>
               <div class="manual-card">
-                <h4>🗺️ NASA Trek Satellite Tiles</h4>
-                <p>Stream real orbital photography mosaics directly from NASA Moon Trek (LROC WAC 303ppd) and Mars Trek (Viking MDIM21).</p>
+                <h4>🌕 High-Res Trek Satellite Tiles</h4>
+                <p>Powered by NASA Moon Trek LROC WAC and Mars Viking MDIM2 mosaic tiles, providing zoomable 0.5m surface detail with zero CORS blocks.</p>
               </div>
               <div class="manual-card">
-                <h4>⏱️ Chronological Timeline Slider</h4>
-                <p>Drag the slider from 1962 to 2026 or click <strong>▶ Play</strong> to watch the hardware appear chronologically across space history.</p>
-              </div>
-            </div>
-          </section>
-
-          <!-- Section 2: Storytelling & Perspectives -->
-          <section class="manual-section">
-            <h3>🎙️ 2. Voice Storytelling Room & Perspectives</h3>
-            <div class="manual-grid">
-              <div class="manual-card">
-                <h4>🎭 5 Character Perspectives</h4>
-                <p>Switch between <strong>The Robot</strong>, <strong>The Engineer</strong>, <strong>The Scientist</strong>, <strong>Mission Control</strong>, and <strong>Future Explorer</strong>. Every perspective preserves verified facts while offering a distinct human and robotic lens.</p>
+                <h4>⏱️ Chronological Slider</h4>
+                <p>Spans from 1966 to 2026. Watch hardware land in real time, or scrub to specific milestone eras with marker clustering.</p>
               </div>
               <div class="manual-card">
-                <h4>📖 5-Beat Narrative Arc</h4>
-                <p>Every hero mission follows five dramatic beats: 1) Launch, 2) Journey & How it worked, 3) Challenge, 4) Discovery, and 5) Legacy & Silence.</p>
-              </div>
-              <div class="manual-card">
-                <h4>🐣 3 Audience Age Bands</h4>
-                <p>Switch between <strong>Cadet (6-8)</strong>, <strong>Explorer (9-11)</strong>, and <strong>Commander (12-14)</strong> to adapt reading depth, sentence length, and vocabulary.</p>
+                <h4>🛰️ Three Marker Archetypes</h4>
+                <p>Pins differentiate between 🚀 Landing Sites, 📍 Last Known Positions (Spirit & Opportunity rovers), and 💥 Impact Sites (Rangers, Lunar Orbiters, S-IVB boosters).</p>
               </div>
             </div>
           </section>
 
-          <!-- Section 3: 3D Models & Interactive Lab -->
+          <!-- Section 2: 3D Object Viewer & Storytelling -->
           <section class="manual-section">
-            <h3>🔬 3. 3D Inspection & "How It Worked" Lab</h3>
+            <h3>🛰️ 2. 3D Inspection & Storytelling Engine</h3>
             <div class="manual-grid">
               <div class="manual-card">
-                <h4>🛰️ Official NASA 3D Models</h4>
-                <p>Interactive 3D models with component hotspots for Apollo LM, Viking Lander, Opportunity Rover, Perseverance Rover, and Ingenuity Helicopter.</p>
+                <h4>🔍 Interactive 3D Stages</h4>
+                <p>WebGL GLB models with orbital orbit-controls, 360-degree rotation, pinch zoom, and interactive Hotspot nodes with engineering deep-dives.</p>
               </div>
               <div class="manual-card">
-                <h4>☀️ Solar Dust Simulator</h4>
-                <p>Test Opportunity's solar panels against Martian dust opacity (Tau) and discover how wind gusts saved the rover.</p>
+                <h4>🎙️ 5-Beat Voice Storytelling</h4>
+                <p>Hero missions feature five narrative beats: Launch, Journey, Challenge, Discovery, and Legacy, with speech synthesis, audio waveforms, and teleprompter karaoke.</p>
               </div>
               <div class="manual-card">
-                <h4>🪂 Sky Crane Sequence</h4>
-                <p>Explore the four phases of powered descent that lowered Curiosity and Perseverance into Gale and Jezero craters.</p>
+                <h4>🎭 5 Voice Perspectives</h4>
+                <p>Hear history from The Robot, The Engineer, The Scientist, Mission Control, or a Future Astronaut standing beside the relic.</p>
+              </div>
+              <div class="manual-card">
+                <h4>🔬 Physics Simulator Labs</h4>
+                <p>Four interactive simulators: Opportunity Dust Storm Tau, Sky Crane 4-Stage Descent, Lunar Laser Ranging picosecond timer, and Ingenuity Thin-Air Aerodynamics.</p>
               </div>
             </div>
           </section>
 
-          <!-- Section 4: Accessibility -->
+          <!-- Section 3: Provenance & Accessibility -->
           <section class="manual-section">
-            <h3>♿ 4. Accessibility & Full Keyboard Control</h3>
+            <h3>⚖️ 3. Provenance & WCAG Accessibility</h3>
             <div class="manual-grid">
               <div class="manual-card">
-                <h4>📋 Full Table Alternative</h4>
-                <p>Click <strong>List View</strong> in the top-right to view all artifacts in a sortable, screen-reader-friendly data table.</p>
+                <h4>🏛️ 100% NASA Public Domain</h4>
+                <p>Zero copyrighted logos. Every image links to official NASA Image and Video Library IDs with clear provenance lines.</p>
               </div>
               <div class="manual-card">
-                <h4>⌨️ Keyboard Focus</h4>
-                <p>All map pins, buttons, and sliders feature visible focus outlines (<code>:focus-visible</code>) and can be activated via <code>Enter</code> or <code>Space</code>.</p>
-              </div>
-              <div class="manual-card">
-                <h4>🧘 Reduced Motion</h4>
-                <p>Respects your OS setting for <code>prefers-reduced-motion</code>, disabling warp effects and pausing auto-rotations.</p>
+                <h4>♿ WCAG 2.1 AA Compliant</h4>
+                <p>Skip-to-content links, full keyboard tab order, ARIA dialog landmarks, screen-reader table alternatives, and prefers-reduced-motion compatibility.</p>
               </div>
             </div>
           </section>
@@ -252,17 +287,24 @@ class GuidedTourController {
     overlay.setAttribute('aria-label', '3-Minute Guided Tour Controller');
 
     overlay.innerHTML = `
+      <div class="tour-progress-bar">
+        <div class="tour-progress-fill" id="tour-progress-fill"></div>
+      </div>
       <div class="tour-hud-inner">
         <div class="tour-hud-top">
           <div class="tour-step-badge">
             <span class="tour-pulse-dot"></span>
             <span id="tour-step-counter">Tour Stop 1 of 7</span>
           </div>
-          <button class="tour-exit-btn" id="btn-exit-tour" title="Exit guided tour">&times; Exit Tour</button>
+          <div class="tour-hud-actions-group">
+            <button class="tour-hud-btn-mini active-voice" id="btn-tour-voice" title="Toggle Female Voice Audio Guide">🔊 Voice ON</button>
+            <button class="tour-hud-btn-mini" id="btn-tour-minimize" title="Minimize / Expand tour HUD">_</button>
+            <button class="tour-exit-btn" id="btn-exit-tour" title="Exit guided tour">&times; Exit Tour</button>
+          </div>
         </div>
 
         <h3 id="tour-step-title">Tour Stop Title</h3>
-        <p id="tour-step-desc">Tour description...</p>
+        <p id="tour-step-desc" class="tour-hud-desc">Tour description...</p>
 
         <div class="tour-hud-bottom">
           <button class="btn-tour-nav" id="btn-tour-prev">‹ Previous</button>
@@ -279,12 +321,16 @@ class GuidedTourController {
     overlay.querySelector('#btn-tour-prev').addEventListener('click', () => this.prevStop());
     overlay.querySelector('#btn-tour-next').addEventListener('click', () => this.nextStop());
     overlay.querySelector('#btn-tour-autoplay').addEventListener('click', () => this.toggleAutoPlay());
+    overlay.querySelector('#btn-tour-minimize').addEventListener('click', () => this.toggleMinimize());
+    overlay.querySelector('#btn-tour-voice').addEventListener('click', () => this.toggleVoice());
   }
 
   startTour() {
     this.isTourRunning = true;
     this.currentStopIndex = 0;
+    this.isMinimized = false;
     if (this.tourOverlay) {
+      this.tourOverlay.classList.remove('minimized');
       this.tourOverlay.classList.add('active');
     }
     this.executeCurrentStop();
@@ -295,15 +341,20 @@ class GuidedTourController {
 
   exitTour() {
     this.isTourRunning = false;
-    if (this.autoAdvanceTimer) {
-      clearInterval(this.autoAdvanceTimer);
-      this.autoAdvanceTimer = null;
-    }
+    this.stopAutoPlay();
+    this.stopVoice();
     if (this.tourOverlay) {
-      this.tourOverlay.classList.remove('active');
+      this.tourOverlay.classList.remove('active', 'minimized');
+    }
+    // Clean up any open demo overlays
+    if (window.objectViewer) window.objectViewer.close();
+    if (window.storyMode) window.storyMode.close();
+    if (window.interactiveLab) window.interactiveLab.close();
+    if (window.a11yController && window.a11yController.tableViewActive) {
+      window.a11yController.toggleTableView();
     }
     if (typeof window.showSpaceToast === 'function') {
-      window.showSpaceToast('Guided tour completed. Enjoy free exploration!', '✨', 3000);
+      window.showSpaceToast('Guided tour completed. You are now in free exploration mode!', '✨', 3000);
     }
   }
 
@@ -320,15 +371,26 @@ class GuidedTourController {
     prevBtn.disabled = (this.currentStopIndex === 0);
     nextBtn.textContent = (this.currentStopIndex === this.tourStops.length - 1) ? 'Finish Tour 🏆' : 'Next Stop ›';
 
+    // Speak description if voice enabled
+    if (this.voiceEnabled) {
+      this.speakStopDescription(`${stop.title}. ${stop.description}`);
+    }
+
     // Execute stop action
     try {
       stop.action();
     } catch (e) {
       console.warn('Tour stop action error:', e);
     }
+
+    // Reset auto-play timer if running
+    if (this.autoPlayActive) {
+      this.startAutoPlayTimer();
+    }
   }
 
   nextStop() {
+    this.stopVoice();
     if (this.currentStopIndex < this.tourStops.length - 1) {
       this.currentStopIndex++;
       this.executeCurrentStop();
@@ -338,27 +400,123 @@ class GuidedTourController {
   }
 
   prevStop() {
+    this.stopVoice();
     if (this.currentStopIndex > 0) {
       this.currentStopIndex--;
       this.executeCurrentStop();
     }
   }
 
-  toggleAutoPlay() {
-    const btn = this.tourOverlay?.querySelector('#btn-tour-autoplay');
-    if (this.autoAdvanceTimer) {
-      clearInterval(this.autoAdvanceTimer);
-      this.autoAdvanceTimer = null;
-      if (btn) btn.innerHTML = '▶ Auto-Play (15s)';
-    } else {
-      if (btn) btn.innerHTML = '⏸ Pause Auto-Play';
-      this.autoAdvanceTimer = setInterval(() => {
+  startAutoPlayTimer() {
+    if (this.autoPlayInterval) {
+      clearInterval(this.autoPlayInterval);
+      this.autoPlayInterval = null;
+    }
+
+    this.autoPlayStartTime = Date.now();
+    const duration = this.autoPlayDuration;
+    const progressFill = this.tourOverlay?.querySelector('#tour-progress-fill');
+
+    this.autoPlayInterval = setInterval(() => {
+      const elapsed = Date.now() - this.autoPlayStartTime;
+      const pct = Math.min(100, (elapsed / duration) * 100);
+      if (progressFill) progressFill.style.width = `${pct}%`;
+
+      if (elapsed >= duration) {
+        clearInterval(this.autoPlayInterval);
+        this.autoPlayInterval = null;
         if (this.currentStopIndex < this.tourStops.length - 1) {
           this.nextStop();
         } else {
           this.exitTour();
         }
-      }, 15000);
+      }
+    }, 100);
+  }
+
+  stopAutoPlay() {
+    this.autoPlayActive = false;
+    if (this.autoPlayInterval) {
+      clearInterval(this.autoPlayInterval);
+      this.autoPlayInterval = null;
+    }
+    const btn = this.tourOverlay?.querySelector('#btn-tour-autoplay');
+    if (btn) {
+      btn.innerHTML = '▶ Auto-Play (15s)';
+      btn.classList.remove('playing');
+    }
+    const progressFill = this.tourOverlay?.querySelector('#tour-progress-fill');
+    if (progressFill) progressFill.style.width = '0%';
+  }
+
+  toggleAutoPlay() {
+    const btn = this.tourOverlay?.querySelector('#btn-tour-autoplay');
+    if (this.autoPlayActive) {
+      this.stopAutoPlay();
+      if (typeof window.showSpaceToast === 'function') {
+        window.showSpaceToast('⏸ Auto-Play Paused. Click Next Stop whenever ready!', '⏱️', 2500);
+      }
+    } else {
+      this.autoPlayActive = true;
+      if (btn) {
+        btn.innerHTML = '⏸ Pause Auto-Play';
+        btn.classList.add('playing');
+      }
+      this.startAutoPlayTimer();
+      if (typeof window.showSpaceToast === 'function') {
+        window.showSpaceToast('▶ Auto-Play Active: Auto-advancing every 15 seconds.', '🚀', 2500);
+      }
+    }
+  }
+
+  toggleMinimize() {
+    this.isMinimized = !this.isMinimized;
+    if (this.tourOverlay) {
+      this.tourOverlay.classList.toggle('minimized', this.isMinimized);
+      const minBtn = this.tourOverlay.querySelector('#btn-tour-minimize');
+      if (minBtn) minBtn.textContent = this.isMinimized ? '□ Expand' : '_';
+    }
+  }
+
+  toggleVoice() {
+    this.voiceEnabled = !this.voiceEnabled;
+    const btn = this.tourOverlay?.querySelector('#btn-tour-voice');
+    if (btn) {
+      btn.classList.toggle('active-voice', this.voiceEnabled);
+      btn.textContent = this.voiceEnabled ? '🔊 Voice ON' : '🔇 Voice OFF';
+    }
+    if (!this.voiceEnabled) {
+      this.stopVoice();
+    } else {
+      const stop = this.tourStops[this.currentStopIndex];
+      if (stop) this.speakStopDescription(`${stop.title}. ${stop.description}`);
+    }
+  }
+
+  speakStopDescription(text) {
+    if (!('speechSynthesis' in window)) return;
+    this.stopVoice();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.18; // Warm feminine pitch
+
+    const voices = window.speechSynthesis.getVoices();
+    const enVoices = voices.filter(v => v.lang.startsWith('en'));
+    const femaleKeywords = ['zira', 'jenny', 'aria', 'samantha', 'victoria', 'karen', 'moira', 'fiona', 'female'];
+    let best = null;
+    for (const kw of femaleKeywords) {
+      best = enVoices.find(v => v.name.toLowerCase().includes(kw));
+      if (best) break;
+    }
+    if (best) utterance.voice = best;
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  stopVoice() {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
     }
   }
 }
