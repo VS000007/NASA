@@ -164,7 +164,7 @@ class SolarSystemNavigator {
     }
     if (this.planets['Moon']) {
       this.planets['Moon'].radius = 8;
-      this.planets['Moon'].orbit_radius = 48; // Clear separation from Earth
+      this.planets['Moon'].orbit_radius = 56; // Generous clear separation from Earth
     }
     if (this.planets['Mars']) {
       this.planets['Mars'].radius = 14;
@@ -562,7 +562,8 @@ class SolarSystemNavigator {
   updatePlanets(delta) {
     for (const [name, planet] of Object.entries(this.planets)) {
       if (planet.orbit_parent === 'Earth') {
-        const speed = (360.0 / planet.period_days) * (this.timeSpeed * 10);
+        // Smooth, gentle, majestic lunar orbit (~80 seconds per revolution)
+        const speed = (360.0 / planet.period_days) * (this.timeSpeed * 0.45);
         planet.angle_rad = (planet.angle_rad || 0) + speed;
         const earth = this.planets['Earth'];
         if (earth && earth.computedX !== undefined) {
@@ -628,7 +629,7 @@ class SolarSystemNavigator {
         
         ctx.save();
         ctx.translate(px, py);
-        ctx.rotate(time * (isHovered ? 1.0 : 0.4));
+        ctx.rotate(time * (isHovered ? 0.6 : 0.15));
         ctx.strokeStyle = (name === 'Moon') 
           ? `rgba(226, 232, 240, ${0.65 + pulse * 0.35})` 
           : `rgba(255, 87, 34, ${0.75 + pulse * 0.25})`;
@@ -662,15 +663,16 @@ class SolarSystemNavigator {
       this.drawRealisticSphere(ctx, name, px, py, pr, lightDirX, lightDirY);
 
       // ================= LARGE READABLE LABELS FOR KIDS =================
-      // Offset Earth and Moon labels gracefully so they never collide
+      // Clear, non-overlapping label positioning
       let labelOffsetY = pr + 18;
       let labelOffsetX = 0;
 
-      if (name === 'Moon') {
-        labelOffsetX = (px > (this.planets['Earth']?.computedX || 0)) ? 20 : -20;
-        labelOffsetY = pr + 14;
-      } else if (name === 'Earth') {
-        labelOffsetY = pr + 18;
+      if (name === 'Earth') {
+        labelOffsetX = 0;
+        labelOffsetY = -(pr + 12); // Always cleanly placed ABOVE Earth
+      } else if (name === 'Moon') {
+        labelOffsetX = 0;
+        labelOffsetY = pr + 16;    // Always cleanly placed BELOW the Moon
       }
 
       ctx.font = isTarget 
