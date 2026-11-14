@@ -5085,19 +5085,18 @@ model-viewer {
 /* Interactive Comparison Toolbar */
 .forgotten-toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 1.75rem;
-  background: rgba(10, 15, 30, 0.85);
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.75rem 1.75rem;
+  background: rgba(10, 15, 30, 0.9);
   border-bottom: 1px solid var(--border-glass);
-  flex-wrap: wrap;
-  gap: 0.75rem;
 }
-.toolbar-left-group {
+.toolbar-top-row {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 0.75rem;
 }
 .view-toggle-pills, .body-filter-pills {
   display: flex;
@@ -5108,21 +5107,22 @@ model-viewer {
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
-.toggle-pill-btn, .filter-pill-btn {
+.toggle-pill-btn, .filter-pill-btn, .cat-pill-btn {
   background: transparent;
   border: none;
   color: #94a3b8;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
-  padding: 5px 12px;
+  padding: 5px 11px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+  white-space: nowrap;
 }
-.toggle-pill-btn:hover, .filter-pill-btn:hover {
+.toggle-pill-btn:hover, .filter-pill-btn:hover, .cat-pill-btn:hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.08);
 }
@@ -5131,10 +5131,58 @@ model-viewer {
   color: #030712;
   box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
 }
-.filter-pill-btn.active {
+.filter-pill-btn.active, .cat-pill-btn.active {
   background: rgba(0, 229, 255, 0.2);
   color: var(--accent-cyan);
   border: 1px solid var(--accent-cyan);
+}
+.toolbar-categories-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.toolbar-categories-row::-webkit-scrollbar {
+  display: none;
+}
+.ledger-search-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 4px 10px;
+  border-radius: 8px;
+  min-width: 260px;
+}
+.ledger-search-box input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 0.78rem;
+  outline: none;
+  width: 100%;
+}
+.ledger-search-box input::placeholder {
+  color: #64748b;
+}
+.btn-clear-search {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.btn-clear-search:hover {
+  color: #ef4444;
+}
+.ledger-empty-msg {
+  text-align: center;
+  color: #94a3b8;
+  padding: 2.5rem 1rem;
+  font-size: 0.9rem;
 }
 
 /* Custom Hardware-Accelerated Space Scrollbars - Zero White Bar Jank */
