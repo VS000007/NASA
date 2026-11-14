@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/index.py": {
+      "includeFiles": "data/**"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/credits",
+      "destination": "/credits.html"
+    },
+    {
+      "source": "/((?!api/|css/|js/|models/|data/|images/|favicon|credits|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

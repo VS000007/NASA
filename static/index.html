@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Archaeologists | NASA Hackathon</title>
+  <meta name="description" content="Discover abandoned equipment on the Moon and Mars with real NASA 3D models and JPL Horizons data.">
+  <meta name="theme-color" content="#030712">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+  <!-- Google Model Viewer Web Component (Local bundle for offline speed) -->
+  <script type="module" src="/js/model-viewer.min.js"></script>
+
+  <!-- Leaflet MarkerCluster CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+
+  <!-- Main Styling -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- ================= VIEW 1: SOLAR SYSTEM NAVIGATOR ================= -->
+  <canvas id="space-canvas"></canvas>
+  <div class="ambient-glow"></div>
+
+  <!-- Top Navigation HUD -->
+  <header class="hud-header">
+    <div class="hud-brand">
+      <div class="nasa-meatball">NASA</div>
+      <div class="brand-text">
+        <div class="brand-title-row">
+          <h1>Space Archaeologists</h1>
+          <span id="telemetry-badge" class="telemetry-badge"><span class="telemetry-dot"></span> JPL Link Active</span>
+        </div>
+        <p>Abandoned but not Forgotten • Solar System Mission Map</p>
+      </div>
+    </div>
+
+    <div class="hud-actions">
+      <button id="btn-explore-moon" class="btn-glass btn-moon" title="Jump to the Moon">
+        <span>🌕</span> Explore Moon <span id="header-moon-count" style="opacity:0.85; font-size:0.8em;">(45 Relics)</span>
+      </button>
+      <button id="btn-explore-mars" class="btn-glass btn-mars" title="Jump to Mars">
+        <span>🔴</span> Explore Mars <span id="header-mars-count" style="opacity:0.85; font-size:0.8em;">(17 Relics)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Interactive Planet Tooltip -->
+  <div id="planet-tooltip" class="planet-tooltip">
+    <div class="tooltip-title">Planet Name</div>
+    <div class="tooltip-subtitle">Distance</div>
+    <span class="tooltip-badge">Relic Badge</span>
+  </div>
+
+  <!-- Bottom Mission Banner -->
+  <aside class="bottom-banner">
+    <span class="banner-tag">Archival Mission</span>
+    <p id="hud-banner-text">
+      Drag to pan across the solar system, scroll to zoom in/out. <strong>Click the Moon or Mars</strong> to descend onto high-resolution NASA Trek surface maps!
+    </p>
+    <div class="cta-hint">
+      <span>✦ Powered by NASA JPL Horizons API & Trek Imagery</span>
+      <a href="/credits.html" style="color:var(--accent-gold); margin-left:16px; font-size:0.8rem; text-decoration:underline;">📜 Credits & Sources</a>
+    </div>
+  </aside>
+
+  <!-- Floating Navigation Controls -->
+  <div class="floating-controls">
+    <button id="btn-zoom-in" class="control-btn" title="Zoom In">+</button>
+    <button id="btn-zoom-out" class="control-btn" title="Zoom Out">−</button>
+    <button id="btn-zoom-reset" class="control-btn" title="Reset View" style="font-size:1rem;">⟲</button>
+  </div>
+
+  <!-- Warp Transition Overlay -->
+  <div id="warp-overlay" class="warp-overlay">
+    <div class="warp-telemetry-ring"></div>
+    <h2 id="warp-heading">Descending to Orbit...</h2>
+    <p id="warp-subheading">Calibrating planetary surface sensors</p>
+  </div>
+
+  <!-- Friendly Toast Notification System -->
+  <div id="space-toast" class="space-toast" role="status" aria-live="polite">
+    <span class="toast-icon">🚀</span>
+    <span id="toast-message" class="toast-message">Welcome to Space Archaeologists!</span>
+  </div>
+
+  <!-- ================= VIEW 2: LEAFLET SURFACE MAP ================= -->
+  <section id="surface-screen">
+    <!-- Surface HUD Header -->
+    <div class="surface-hud">
+      <div class="surface-hud-left">
+        <button id="btn-back-to-solar" class="btn-back" title="Return to Solar System">
+          <span>←</span> Solar System
+        </button>
+        <div class="surface-info">
+          <h2 id="surface-body-title">The Moon (Luna)</h2>
+          <p id="surface-body-subtitle">Click any landing site pin to inspect 3D model & archival story</p>
+        </div>
+      </div>
+
+      <div class="surface-hud-right">
+        <!-- Tile Streaming Status Indicator -->
+        <div id="surface-tile-status" class="tile-status-pill">
+          <span class="tile-pulse-dot"></span>
+          <span id="tile-status-label">NASA Trek Stream Active</span>
+        </div>
+
+        <div class="surface-switch-toggle">
+          <button id="btn-switch-moon" class="active">🌕 Moon</button>
+          <button id="btn-switch-mars">🔴 Mars</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chronological Timeline Control (1966 to 2026) -->
+    <div class="surface-timeline-bar">
+      <div class="timeline-meta-row">
+        <button id="btn-timeline-play" class="btn-timeline-play" title="Play mission chronology animation">
+          <span class="play-icon">▶</span> <span class="play-text">Play</span>
+        </button>
+
+        <div class="timeline-year-indicator">
+          <span class="year-label">Year:</span>
+          <span id="timeline-year-val" class="year-val">1966</span>
+        </div>
+
+        <span id="timeline-era-text" class="timeline-era-pill">Surveyor & Lunar Robotic Probes</span>
+
+        <span id="surface-relic-count" class="surface-counter-pill">0 / 45 discarded relics</span>
+      </div>
+
+      <div class="timeline-slider-track">
+        <span class="year-edge">1966</span>
+        <input type="range" id="timeline-slider" min="1966" max="2026" value="1966" step="1" aria-label="Mission Year Slider">
+        <span class="year-edge">Today</span>
+      </div>
+
+      <!-- Dynamically generated body-only milestones -->
+      <div class="timeline-milestones" id="timeline-milestones"></div>
+
+      <!-- Search & Category Filters -->
+      <div class="surface-filter-row">
+        <div class="search-box-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="surface-search" placeholder="Search relics, missions, craters (e.g. Apollo, Rover, Surveyor)..." aria-label="Search relics">
+          <button id="btn-clear-search" class="btn-clear-search" style="display:none;" title="Clear search">✕</button>
+        </div>
+        <div class="category-pills" id="category-pills">
+          <button class="cat-pill active" data-category="all">All Relics</button>
+          <button class="cat-pill" data-category="lander stage">Lander Stage</button>
+          <button class="cat-pill" data-category="rover">Rover</button>
+          <button class="cat-pill" data-category="science package">Science Package</button>
+          <button class="cat-pill" data-category="impactor">Impactor</button>
+          <button class="cat-pill" data-category="entry hardware">Entry Hardware</button>
+          <button class="cat-pill" data-category="helicopter">Helicopter</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaflet Map Container -->
+    <div id="map-description" class="sr-only">
+      Interactive map showing the surface of the Moon or Mars using NASA Trek satellite imagery tiles.
+      Markers indicate locations of abandoned NASA hardware including lander stages, rovers, science packages, and impact sites.
+      Use the timeline slider above to filter by year. Use the search box and category pills to filter by name or type.
+      A list/table alternative is available via the List View button.
+    </div>
+    <div id="leaflet-map" role="application" aria-describedby="map-description" aria-label="Surface map of abandoned NASA hardware"></div>
+  </section>
+
+  <!-- ================= VIEW 3: OBJECT PAGE & 3D VIEWER ================= -->
+  <section id="object-screen">
+    <!-- Object Screen Top HUD -->
+    <div class="object-hud">
+      <div class="object-hud-left">
+        <button id="btn-back-to-map" class="btn-back" title="Return to Surface Map">
+          <span>←</span> Surface Map
+        </button>
+        <button id="btn-obj-to-solar" class="btn-glass" title="Return to Solar System" style="font-size:0.85rem; padding:0.5rem 0.9rem;">
+          <span>🪐</span> Solar System
+        </button>
+      </div>
+
+      <div class="object-hud-right">
+        <div class="reading-level-box">
+          <span id="reading-level-label">Reading Level: Explorer (Ages 7–10)</span>
+          <button id="btn-reading-toggle" class="toggle-switch-btn" title="Switch reading level">
+            Switch to Commander (11–16)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Layout: Centered Top 3D Stage + Bottom Story Card -->
+    <div class="object-main-layout">
+      <!-- Centered Top: 3D Model Stage / Archival Photo Hero -->
+      <div class="object-3d-stage">
+        <!-- Stage Top Control Bar (Source Badge + View Mode Toggles) -->
+        <div class="stage-control-panel">
+          <div id="model-source-badge" class="model-source-badge">Official NASA 3D Resource</div>
+          <div class="stage-view-toggles" id="stage-view-toggles">
+            <button id="btn-toggle-3d" class="stage-toggle-btn active" title="View interactive 3D model">
+              <span>🛰️</span> 3D Model
+            </button>
+            <button id="btn-toggle-photo" class="stage-toggle-btn" title="View official high-res archival photography">
+              <span>📷</span> Archival Photo
+            </button>
+            <button id="btn-reset-camera" class="stage-toggle-btn" title="Reset camera angle & zoom">
+              <span>⟲</span> Reset
+            </button>
+          </div>
+        </div>
+        
+        <!-- Loading Indicator for Model -->
+        <div id="model-loader" class="model-loading-indicator">
+          <div class="loading-spinner"></div>
+          <span>Loading NASA 3D Model...</span>
+        </div>
+
+        <!-- Active Hotspot Callout Box -->
+        <div id="hotspot-active-info">
+          <span class="hotspot-prompt">💡 Click any numbered node on the 3D model to inspect equipment parts.</span>
+        </div>
+
+        <!-- Google Model Viewer with realistic PBR studio lighting & tight bounds -->
+        <model-viewer
+          id="nasa-model-viewer"
+          src=""
+          alt="NASA 3D Space Relic"
+          camera-controls
+          touch-action="pan-y"
+          auto-rotate
+          auto-rotate-delay="1000"
+          rotation-per-second="14deg"
+          shadow-intensity="1.6"
+          shadow-softness="0.5"
+          exposure="1.15"
+          environment-image="neutral"
+          bounds="tight"
+          interaction-prompt="auto"
+          ar>
+        </model-viewer>
+
+        <!-- Clean Archival Photo Hero Stage when model_file is null -->
+        <div id="photo-fallback-hero" class="photo-fallback-hero" style="display:none;">
+          <div class="photo-fallback-inner">
+            <img id="photo-fallback-img" src="" alt="Archival NASA Photographic Record">
+            <div class="photo-fallback-caption">
+              <span class="photo-badge">📷 Official NASA Archival Photography</span>
+              <p>No official 3D mesh model has been released by NASA for this artifact. Official high-resolution mission imagery displayed above.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="model-instructions-badge" class="model-instructions-badge">
+          <span>🔄 Drag to rotate 360° • Pinch / Scroll to zoom • Click nodes for callouts</span>
+        </div>
+      </div>
+
+      <!-- Historical Investigation Story Card -->
+      <div id="story-card-scroll" class="object-story-panel">
+        <!-- Unverified Telemetry Alert Badge (Shown only if verified === false) -->
+        <div id="obj-unverified-badge" class="unverified-warning-box" style="display:none;">
+          <div class="unverified-icon">⚠️</div>
+          <div class="unverified-content">
+            <h4>Telemetry Unconfirmed • Location Approximate (TODO: verify)</h4>
+            <p>Landing or impact coordinates for this relic are unconfirmed in primary orbital telemetry or lost during atmospheric descent. Check NASA archives for ongoing reconnaissance.</p>
+          </div>
+        </div>
+
+        <div class="story-header-row">
+          <div class="story-meta-tags">
+            <span id="obj-badge-mission" class="story-pill pill-cyan">Mission</span>
+            <span id="obj-badge-year" class="story-pill pill-gold">Year</span>
+            <span id="obj-badge-category" class="story-pill pill-purple">Category</span>
+            <span id="obj-badge-status" class="story-pill pill-emerald">Status</span>
+          </div>
+
+          <!-- Voice Narration Button -->
+          <button id="btn-narrate-story" class="btn-voice-narrator" title="Listen to story read aloud">
+            <span class="voice-icon">🔊</span>
+            <span class="voice-text">Listen to Story</span>
+            <div class="voice-wave">
+              <span></span><span></span><span></span><span></span>
+            </div>
+          </button>
+        </div>
+
+        <h2 id="obj-title" class="story-title">Object Title</h2>
+        <h3 id="obj-headline" class="story-headline">Headline</h3>
+
+        <!-- Kid Story Narrative -->
+        <div class="kid-narrative-box">
+          <div id="obj-story-text">
+            <p class="story-lead">Loading artifact story...</p>
+          </div>
+        </div>
+
+        <!-- Enigma Fact Highlight Box -->
+        <div id="field-enigma" class="enigma-box" title="Click to hear this enigma fact!">
+          <div class="enigma-icon">✨</div>
+          <div class="enigma-content">
+            <div class="enigma-header-line">
+              <strong>Enigma Fact:</strong>
+              <span class="tap-voice-hint">🔊 Tap to listen</span>
+            </div>
+            <span>Loading...</span>
+          </div>
+        </div>
+
+        <!-- Space Archaeology 6-Field Matrix -->
+        <h4 class="matrix-section-title">
+          <span>📜 Archaeological Field Notes</span>
+          <span style="font-size:0.75rem; font-weight:normal; color:var(--text-secondary); margin-left:auto;">💡 Tap any card to listen</span>
+        </h4>
+        <div class="archaeology-grid">
+          <div id="matrix-who" class="matrix-card">
+            <div class="matrix-label"><span>👤</span> Who <span class="card-voice-icon">🔊</span></div>
+            <div id="field-who" class="matrix-value">-</div>
+          </div>
+          <div id="matrix-what" class="matrix-card">
+            <div class="matrix-label"><span>📦</span> What <span class="card-voice-icon">🔊</span></div>
+            <div id="field-what" class="matrix-value">-</div>
+          </div>
+          <div id="matrix-when" class="matrix-card">
+            <div class="matrix-label"><span>📅</span> When <span class="card-voice-icon">🔊</span></div>
+            <div id="field-when" class="matrix-value">-</div>
+          </div>
+          <div id="matrix-where" class="matrix-card">
+            <div class="matrix-label"><span>📍</span> Where <span class="card-voice-icon">🔊</span></div>
+            <div id="field-where" class="matrix-value">-</div>
+          </div>
+          <div id="matrix-how" class="matrix-card">
+            <div class="matrix-label"><span>⚙️</span> How It Arrived <span class="card-voice-icon">🔊</span></div>
+            <div id="field-how" class="matrix-value">-</div>
+          </div>
+          <div id="matrix-why-left" class="matrix-card full-width">
+            <div class="matrix-label"><span>❓</span> Why Was It Left Behind? <span class="card-voice-icon">🔊</span></div>
+            <div id="field-why-left" class="matrix-value">-</div>
+          </div>
+        </div>
+
+        <!-- NASA Primary Sources Section -->
+        <div class="sources-section-card">
+          <div class="sources-header">
+            <span class="sources-icon">🏛️</span>
+            <h4>NASA Data Sources & Mission Planetary Archives</h4>
+          </div>
+          <div id="obj-sources-list" class="sources-list">
+            <!-- Dynamically populated from source_names -->
+          </div>
+        </div>
+
+        <!-- Archival Photograph -->
+        <div class="archive-photo-card">
+          <img id="obj-archive-photo" src="" alt="Archival Photograph" onerror="this.parentElement.style.display='none'">
+          <div class="archive-photo-caption">Official NASA Photographic Record</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leaflet JS Library & MarkerCluster Plugin -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+  <!-- Application Modules -->
+  <script src="/js/solar_system.js"></script>
+  <script src="/js/surface_map.js"></script>
+  <script src="/js/object_viewer.js"></script>
+  <script src="/js/accessibility.js"></script>
+  <script src="/js/media_panel.js"></script>
+
+</body>
+</html>

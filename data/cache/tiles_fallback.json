@@ -1,0 +1,18 @@
+{
+  "moon": {
+    "primary": "https://trek.nasa.gov/tiles/Moon/EQ/LRO_WAC_Mosaic_Global_303ppd/1.0.0//default/default028mm/{z}/{y}/{x}.jpg",
+    "fallback_attribution": "NASA / GSFC / Arizona State University (LROC)",
+    "min_zoom": 0,
+    "max_zoom": 8,
+    "default_center": [0, 0],
+    "default_zoom": 2
+  },
+  "mars": {
+    "primary": "https://trek.nasa.gov/tiles/Mars/EQ/Mars_Viking_MDIM21_ClrMosaic_global_232m/1.0.0//default/default028mm/{z}/{y}/{x}.jpg",
+    "fallback_attribution": "NASA / JPL / USGS (Viking MDIM21)",
+    "min_zoom": 0,
+    "max_zoom": 8,
+    "default_center": [0, 0],
+    "default_zoom": 2
+  }
+}

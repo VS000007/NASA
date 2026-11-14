@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Credits & Sources | Space Archaeologists</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #030712;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --border-glass: rgba(255, 255, 255, 0.12);
+      --accent-cyan: #00e5ff;
+      --accent-gold: #fbbf24;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --font-main: 'Outfit', sans-serif;
+      --font-title: 'Space Grotesk', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      padding: 40px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    a { color: var(--accent-cyan); }
+    h1 {
+      font-family: var(--font-title);
+      font-size: 2rem;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle { color: var(--text-secondary); margin-bottom: 32px; }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 24px;
+      padding: 8px 16px;
+      border: 1px solid var(--border-glass);
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .back-link:hover { background: rgba(0, 229, 255, 0.1); }
+    section { margin-bottom: 40px; }
+    h2 {
+      font-family: var(--font-title);
+      font-size: 1.3rem;
+      color: var(--accent-cyan);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-glass);
+    }
+    .source-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .source-card h3 { font-size: 1rem; margin-bottom: 4px; }
+    .source-card p { font-size: 0.85rem; color: var(--text-secondary); }
+    .source-card .credit { color: var(--accent-gold); font-size: 0.8rem; }
+    .usage-note {
+      background: rgba(251, 191, 36, 0.08);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+    .usage-note strong { color: var(--accent-gold); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 8px; }
+    th { text-align: left; padding: 8px; background: rgba(0,229,255,0.08); color: var(--accent-cyan); border-bottom: 2px solid var(--border-glass); }
+    td { padding: 8px; border-bottom: 1px solid var(--border-glass); }
+    tr:hover { background: rgba(0,229,255,0.04); }
+    #credits-table-body td { user-select: text; }
+    .gen-note { font-size: 0.75rem; color: var(--text-secondary); margin-top: 32px; text-align: center; }
+  </style>
+</head>
+<body>
+  <a href="/" class="back-link">← Back to Space Archaeologists</a>
+  <h1>Credits & Sources</h1>
+  <p class="subtitle">All imagery, data, and 3D models used in this project with full attribution.</p>
+
+  <div class="usage-note">
+    <strong>NASA Media Usage:</strong> NASA media are generally not copyrighted. Per the
+    <a href="https://www.nasa.gov/nasa-brand-center/images-and-media/" target="_blank" rel="noopener">NASA Brand Center guidelines</a>,
+    NASA material may be used for educational purposes. Credit is given to NASA and the relevant mission team.
+    This project does not use the NASA logo or insignia, does not imply NASA endorsement, and does not include
+    content flagged as third-party or identifiable individuals.
+  </div>
+
+  <section>
+    <h2>🗺️ Map Tile Sources</h2>
+    <div class="source-card">
+      <h3>Moon Surface Tiles</h3>
+      <p>LRO WAC Global Mosaic (303 ppd)</p>
+      <p class="credit">Credit: NASA / GSFC / Arizona State University (LROC)</p>
+      <p>Source: <a href="https://trek.nasa.gov/moon/" target="_blank" rel="noopener">NASA Moon Trek</a></p>
+    </div>
+    <div class="source-card">
+      <h3>Mars Surface Tiles</h3>
+      <p>Viking MDIM21 Color Mosaic (232m)</p>
+      <p class="credit">Credit: NASA / JPL / USGS</p>
+      <p>Source: <a href="https://trek.nasa.gov/mars/" target="_blank" rel="noopener">NASA Mars Trek</a></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>🛰️ 3D Models</h2>
+    <div class="source-card">
+      <h3>Apollo Lunar Module</h3>
+      <p class="credit">Credit: NASA</p>
+      <p>Source: <a href="https://nasa3d.arc.nasa.gov" target="_blank" rel="noopener">NASA 3D Resources</a></p>
+    </div>
+    <div class="source-card">
+      <h3>Viking Lander</h3>
+      <p class="credit">Credit: NASA</p>
+      <p>Source: <a href="https://github.com/nasa/NASA-3D-Resources" target="_blank" rel="noopener">NASA 3D Resources (GitHub)</a></p>
+    </div>
+    <div class="source-card">
+      <h3>Opportunity / Spirit Rover (MER)</h3>
+      <p class="credit">Credit: NASA/JPL-Caltech</p>
+      <p>Source: <a href="https://nasa3d.arc.nasa.gov" target="_blank" rel="noopener">NASA 3D Resources</a></p>
+    </div>
+    <div class="source-card">
+      <h3>Perseverance Rover (Mars 2020)</h3>
+      <p class="credit">Credit: NASA/JPL-Caltech</p>
+      <p>Source: <a href="https://nasa3d.arc.nasa.gov" target="_blank" rel="noopener">NASA 3D Resources</a></p>
+    </div>
+    <div class="source-card">
+      <h3>Ingenuity Helicopter</h3>
+      <p class="credit">Credit: NASA/JPL-Caltech</p>
+      <p>Source: <a href="https://nasa3d.arc.nasa.gov" target="_blank" rel="noopener">NASA 3D Resources</a></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>🌐 APIs & Data Sources</h2>
+    <div class="source-card">
+      <h3>JPL Horizons System</h3>
+      <p>Real-time planetary ephemeris data for solar system visualization.</p>
+      <p class="credit">Credit: NASA / JPL Solar System Dynamics</p>
+      <p>Source: <a href="https://ssd.jpl.nasa.gov/horizons/" target="_blank" rel="noopener">ssd.jpl.nasa.gov</a></p>
+    </div>
+    <div class="source-card">
+      <h3>NASA Image and Video Library</h3>
+      <p>Mission imagery and metadata via the public API.</p>
+      <p class="credit">Credit: NASA</p>
+      <p>Source: <a href="https://images.nasa.gov" target="_blank" rel="noopener">images.nasa.gov</a> / <a href="https://images-api.nasa.gov" target="_blank" rel="noopener">API</a></p>
+    </div>
+    <div class="source-card">
+      <h3>NASA Eyes on the Solar System</h3>
+      <p>Interactive 3D solar system visualization for "Fly to" feature.</p>
+      <p class="credit">Credit: NASA / JPL-Caltech</p>
+      <p>Source: <a href="https://eyes.nasa.gov/apps/solar-system/" target="_blank" rel="noopener">eyes.nasa.gov</a></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>📷 Image Credits by Artifact</h2>
+    <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:12px;">Auto-generated from the project dataset. All images are public domain NASA imagery unless noted.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Artifact</th>
+          <th>Mission</th>
+          <th>NASA ID</th>
+          <th>Credit</th>
+        </tr>
+      </thead>
+      <tbody id="credits-table-body">
+        <tr><td colspan="4" style="text-align:center; color:var(--text-secondary);">Loading...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <p class="gen-note">Generated on <span id="gen-date"></span> from project dataset. This page is auto-generated.</p>
+
+  <script>
+    (async () => {
+      const tbody = document.getElementById('credits-table-body');
+      const dateEl = document.getElementById('gen-date');
+      dateEl.textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      let objects = [];
+      try {
+        const res = await fetch('/data/objects.json');
+        if (res.ok) objects = await res.json();
+      } catch(e) {
+        try {
+          const res2 = await fetch('/api/objects');
+          if (res2.ok) objects = await res2.json();
+        } catch(e2) {}
+      }
+
+      if (!objects.length) {
+        tbody.innerHTML = '<tr><td colspan="4">Failed to load dataset.</td></tr>';
+        return;
+      }
+
+      const creditMap = {
+        'Apollo': 'NASA/JSC',
+        'Ranger': 'NASA/JPL',
+        'Surveyor': 'NASA/JPL',
+        'Lunar Orbiter': 'NASA/GSFC',
+        'Viking': 'NASA/JPL',
+        'Pathfinder': 'NASA/JPL',
+        'Spirit': 'NASA/JPL-Caltech/Cornell',
+        'Opportunity': 'NASA/JPL-Caltech/Cornell',
+        'MER': 'NASA/JPL-Caltech/Cornell',
+        'Phoenix': 'NASA/JPL-Caltech/Univ. of Arizona',
+        'Curiosity': 'NASA/JPL-Caltech/MSSS',
+        'MSL': 'NASA/JPL-Caltech/MSSS',
+        'InSight': 'NASA/JPL-Caltech',
+        'Mars 2020': 'NASA/JPL-Caltech',
+        'Perseverance': 'NASA/JPL-Caltech',
+        'Ingenuity': 'NASA/JPL-Caltech',
+        'LCROSS': 'NASA/GSFC/ASU',
+        'GRAIL': 'NASA/JPL-Caltech/MIT',
+        'LADEE': 'NASA/Ames',
+        'Deep Space': 'NASA/JPL',
+        'Mars Polar': 'NASA/JPL',
+      };
+
+      function inferCredit(mission) {
+        for (const [key, val] of Object.entries(creditMap)) {
+          if (mission.includes(key)) return val;
+        }
+        return 'NASA';
+      }
+
+      tbody.innerHTML = objects.map(o => {
+        const nasaId = o.primary_image_nasa_id || '—';
+        const credit = o.primary_image_credit || inferCredit(o.mission);
+        const link = nasaId !== '—' ? `<a href="https://images.nasa.gov/details/${nasaId}" target="_blank">${nasaId}</a>` : '—';
+        return `<tr><td>${o.name}</td><td>${o.mission}</td><td>${link}</td><td>${credit}</td></tr>`;
+      }).join('');
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Environment variables
+.env
+
+# OS & Deployment files
+Thumbs.db
+.DS_Store
+.vercel/

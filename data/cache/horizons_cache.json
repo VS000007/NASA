@@ -1,0 +1,80 @@
+{
+  "last_updated": "2026-10-17T09:53:53.276860+00:00",
+  "source": "JPL Horizons API",
+  "live_records": 0,
+  "planets": {
+    "Mercury": {
+      "id": "199",
+      "radius": 4,
+      "color": "#cbd5e1",
+      "period_days": 87.97,
+      "orbit_radius": 90,
+      "name": "Mercury",
+      "angle_rad": 1.3037,
+      "x_au": 0.125,
+      "y_au": 0.4569,
+      "data_source": "calculated_ephemeris"
+    },
+    "Venus": {
+      "id": "299",
+      "radius": 7,
+      "color": "#fde047",
+      "period_days": 224.7,
+      "orbit_radius": 135,
+      "name": "Venus",
+      "angle_rad": 0.2716,
+      "x_au": 0.6845,
+      "y_au": 0.1906,
+      "data_source": "calculated_ephemeris"
+    },
+    "Earth": {
+      "id": "399",
+      "radius": 8,
+      "color": "#38bdf8",
+      "period_days": 365.25,
+      "orbit_radius": 190,
+      "name": "Earth",
+      "angle_rad": 4.9872,
+      "x_au": 0.2714,
+      "y_au": -0.9625,
+      "data_source": "Cached NASA JPL Ephemeris"
+    },
+    "Moon": {
+      "id": "301",
+      "radius": 4,
+      "color": "#e2e8f0",
+      "period_days": 27.32,
+      "orbit_parent": "Earth",
+      "orbit_radius": 28,
+      "name": "Moon",
+      "angle_rad": 5.2005,
+      "x_au": 0.0691,
+      "y_au": -0.1302,
+      "data_source": "Cached NASA JPL Ephemeris"
+    },
+    "Mars": {
+      "id": "499",
+      "radius": 6,
+      "color": "#f87171",
+      "period_days": 686.98,
+      "orbit_radius": 260,
+      "name": "Mars",
+      "angle_rad": 3.8457,
+      "x_au": -1.043,
+      "y_au": -0.8858,
+      "data_source": "Cached NASA JPL Ephemeris"
+    },
+    "Jupiter": {
+      "id": "599",
+      "radius": 14,
+      "color": "#fb923c",
+      "period_days": 4332.59,
+      "orbit_radius": 350,
+      "name": "Jupiter",
+      "angle_rad": 3.5986,
+      "x_au": -1.6531,
+      "y_au": -0.8128,
+      "data_source": "calculated_ephemeris"
+    }
+  }
+}
