@@ -5136,29 +5136,6 @@ model-viewer {
   color: var(--accent-cyan);
   border: 1px solid var(--accent-cyan);
 }
-.btn-sync-scroll {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #cbd5e1;
-  padding: 5px 12px;
-  border-radius: 8px;
-  font-size: 0.78rem;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
-}
-.btn-sync-scroll:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-}
-.btn-sync-scroll.active {
-  background: rgba(0, 229, 255, 0.15);
-  border-color: var(--accent-cyan);
-  color: var(--accent-cyan);
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
-}
 
 /* Custom Hardware-Accelerated Space Scrollbars - Zero White Bar Jank */
 .forgotten-column::-webkit-scrollbar,

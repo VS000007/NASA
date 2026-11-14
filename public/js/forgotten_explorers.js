@@ -4,7 +4,7 @@
  *  - Left: Silent, lost, and crashed hardware with last-contact dates, power specs, & "what it taught us"
  *  - Right: Still working for us (reflectors, active rovers, helicopter telemetry)
  *  - Big Comparison Matrix: Interactive head-to-head table comparing Lifespan Multipliers, Power Architecture, Mobility, and Heritage
- *  - Synchronized Smooth Scrolling: Lockstep scrolling with kinetic interpolation and zero lag
+ *  - Smooth Hardware-Accelerated Scrolling with custom space scrollbars and zero lag
  *  - Body Filter: All / Moon / Mars
  *  - Custom Hardware-Accelerated Space Scrollbars (Zero white bar jank)
  */
@@ -14,8 +14,6 @@ class ForgottenExplorersController {
     this.modal = null;
     this.currentView = 'cards'; // 'cards' | 'matrix'
     this.currentFilter = 'all';  // 'all' | 'Moon' | 'Mars'
-    this.syncScrollActive = true;
-    this.isSyncing = false;
 
     this.silentHeroes = [
       {
@@ -382,7 +380,7 @@ class ForgottenExplorersController {
           <button class="forgotten-close-btn" id="btn-close-forgotten" aria-label="Close">&times;</button>
         </header>
 
-        <!-- Interactive Toolbar: View Switcher, Filter Pills, Sync Scroll -->
+        <!-- Interactive Toolbar: View Switcher & Filter Pills -->
         <div class="forgotten-toolbar">
           <div class="toolbar-left-group">
             <div class="view-toggle-pills" role="radiogroup" aria-label="Comparison View Mode">
@@ -399,12 +397,6 @@ class ForgottenExplorersController {
               <button class="filter-pill-btn" data-body="Moon">🌕 Moon (5)</button>
               <button class="filter-pill-btn" data-body="Mars">🔴 Mars (9)</button>
             </div>
-          </div>
-
-          <div class="toolbar-right-group">
-            <button class="btn-sync-scroll active" id="btn-toggle-sync-scroll" title="Synchronize scrolling between both columns">
-              <span class="sync-icon">🔗</span> Sync Scroll: <strong class="sync-state-txt">ON</strong>
-            </button>
           </div>
         </div>
 
@@ -494,53 +486,6 @@ class ForgottenExplorersController {
         this.render();
       });
     });
-
-    // Sync scroll button
-    const syncBtn = modal.querySelector('#btn-toggle-sync-scroll');
-    syncBtn.addEventListener('click', () => {
-      this.syncScrollActive = !this.syncScrollActive;
-      syncBtn.classList.toggle('active', this.syncScrollActive);
-      syncBtn.querySelector('.sync-state-txt').textContent = this.syncScrollActive ? 'ON' : 'OFF';
-      if (typeof window.showSpaceToast === 'function') {
-        window.showSpaceToast(
-          this.syncScrollActive ? '🔗 Synchronized Scrolling Enabled.' : '🔓 Independent Column Scrolling Active.',
-          '🔄',
-          2000
-        );
-      }
-    });
-
-    // Setup Synchronized Smooth Scrolling
-    this.setupSynchronizedScrolling();
-  }
-
-  setupSynchronizedScrolling() {
-    const colSilent = this.modal?.querySelector('#col-silent');
-    const colWorking = this.modal?.querySelector('#col-working');
-    if (!colSilent || !colWorking) return;
-
-    let isScrollingSilent = false;
-    let isScrollingWorking = false;
-
-    colSilent.addEventListener('scroll', () => {
-      if (!this.syncScrollActive || isScrollingSilent || this.currentView !== 'cards') return;
-      isScrollingWorking = true;
-      const maxSilent = colSilent.scrollHeight - colSilent.clientHeight;
-      const pct = maxSilent > 0 ? (colSilent.scrollTop / maxSilent) : 0;
-      const maxWorking = colWorking.scrollHeight - colWorking.clientHeight;
-      colWorking.scrollTop = pct * maxWorking;
-      requestAnimationFrame(() => { isScrollingWorking = false; });
-    }, { passive: true });
-
-    colWorking.addEventListener('scroll', () => {
-      if (!this.syncScrollActive || isScrollingWorking || this.currentView !== 'cards') return;
-      isScrollingSilent = true;
-      const maxWorking = colWorking.scrollHeight - colWorking.clientHeight;
-      const pct = maxWorking > 0 ? (colWorking.scrollTop / maxWorking) : 0;
-      const maxSilent = colSilent.scrollHeight - colSilent.clientHeight;
-      colSilent.scrollTop = pct * maxSilent;
-      requestAnimationFrame(() => { isScrollingSilent = false; });
-    }, { passive: true });
   }
 
   switchView(viewName) {
@@ -549,20 +494,17 @@ class ForgottenExplorersController {
     const matrixView = this.modal?.querySelector('#container-comparison-matrix');
     const btnCards = this.modal?.querySelector('#btn-view-cards');
     const btnMatrix = this.modal?.querySelector('#btn-view-matrix');
-    const syncBtn = this.modal?.querySelector('#btn-toggle-sync-scroll');
 
     if (viewName === 'cards') {
       if (cardsGrid) cardsGrid.style.display = 'grid';
       if (matrixView) matrixView.style.display = 'none';
       btnCards?.classList.add('active');
       btnMatrix?.classList.remove('active');
-      if (syncBtn) syncBtn.style.display = 'inline-flex';
     } else {
       if (cardsGrid) cardsGrid.style.display = 'none';
       if (matrixView) matrixView.style.display = 'block';
       btnCards?.classList.remove('active');
       btnMatrix?.classList.add('active');
-      if (syncBtn) syncBtn.style.display = 'none';
     }
     this.render();
   }
