@@ -36,6 +36,16 @@
       <div class="landing-stars"></div>
     </div>
 
+    <!-- QUANTA_CAT Animated Corner Presentation Badge -->
+    <div id="landing-quanta-banner" class="landing-quanta-banner" title="Presented by Team QUANTA_CAT • 2026 NASA Space Apps Challenge">
+      <span class="quanta-cat-glyph">🐱⚡</span>
+      <div class="quanta-text-stack">
+        <span class="quanta-brand">QUANTA_CAT</span>
+        <span class="quanta-presents">presents ......</span>
+      </div>
+      <span class="quanta-pulse-dot"></span>
+    </div>
+
     <!-- Top Floating Meta Header -->
     <header class="landing-top-bar">
       <div class="landing-brand-tag">
@@ -43,8 +53,14 @@
         <span class="challenge-title">2026 Space Apps Challenge</span>
       </div>
       <div class="landing-top-actions">
+        <a href="#landing-manifesto" class="landing-nav-link" id="btn-scroll-manifesto">
+          <span>📜</span> Manifesto
+        </a>
+        <a href="#landing-team-section" class="landing-nav-link" id="btn-scroll-crew">
+          <span>👥</span> Mission Crew
+        </a>
         <a href="#map" id="landing-skip-link" class="landing-ghost-btn" title="Skip directly to the Interactive Solar System Map">
-          Skip to Space Map &rarr;
+          Enter Space Map &rarr;
         </a>
       </div>
     </header>
@@ -84,26 +100,69 @@
           <div class="landing-drag-hint">
             <span>&olarr; Drag to spin the lander 360&deg; &bull; Scroll to zoom</span>
           </div>
+
+          <!-- Quick Interactive Camera Toolbar -->
+          <div class="landing-camera-toolbar" role="toolbar" aria-label="3D Camera Controls">
+            <button class="cam-preset-btn active" data-orbit="0deg 75deg 105%" title="Default 3/4 Orbit">
+              <span>🛰️</span> Orbit
+            </button>
+            <button class="cam-preset-btn" data-orbit="0deg 90deg 90%" title="Front Engineering View">
+              <span>🎯</span> Front
+            </button>
+            <button class="cam-preset-btn" data-orbit="0deg 15deg 100%" title="Top Down Deck View">
+              <span>📐</span> Top
+            </button>
+            <button class="cam-preset-btn" data-orbit="90deg 85deg 80%" title="Close-Up Macro View">
+              <span>🔍</span> Detail
+            </button>
+            <button id="btn-landing-autorotate" class="cam-preset-btn active" title="Toggle Auto-Rotation">
+              <span>🔄</span> Auto-Spin
+            </button>
+          </div>
         </div>
 
         <!-- 3D Relic Selector Pills -->
         <div class="landing-model-selector" role="group" aria-label="Select 3D Relic to Inspect">
-          <button class="model-select-pill active" data-model="/models/apollo_lunar_module.glb" data-name="Apollo 11 Lunar Module (Moon &bull; 1969)">
+          <button class="model-select-pill active" data-model="/models/apollo_lunar_module.glb" data-relic="apollo11" data-name="Apollo 11 Lunar Module (Moon &bull; 1969)">
             <span>🌕</span> Apollo 11 Lander
           </button>
-          <button class="model-select-pill" data-model="/models/perseverance_rover.glb" data-name="Perseverance Rover (Mars &bull; 2021)">
+          <button class="model-select-pill" data-model="/models/perseverance_rover.glb" data-relic="perseverance" data-name="Perseverance Rover (Mars &bull; 2021)">
             <span>🔴</span> Perseverance Rover
           </button>
-          <button class="model-select-pill" data-model="/models/ingenuity_helicopter.glb" data-name="Ingenuity Helicopter (Mars &bull; 2021)">
+          <button class="model-select-pill" data-model="/models/ingenuity_helicopter.glb" data-relic="ingenuity" data-name="Ingenuity Helicopter (Mars &bull; 2021)">
             <span>🚁</span> Ingenuity Helicopter
           </button>
-          <button class="model-select-pill" data-model="/models/viking_lander.glb" data-name="Viking 1 Lander (Mars &bull; 1976)">
+          <button class="model-select-pill" data-model="/models/viking_lander.glb" data-relic="viking" data-name="Viking 1 Lander (Mars &bull; 1976)">
             <span>🛰️</span> Viking 1 Lander
           </button>
-          <button class="model-select-pill" data-model="/models/opportunity_rover.glb" data-name="Opportunity Rover (Mars &bull; 2004)">
+          <button class="model-select-pill" data-model="/models/opportunity_rover.glb" data-relic="opportunity" data-name="Opportunity Rover (Mars &bull; 2004)">
             <span>☀️</span> Opportunity Rover
           </button>
         </div>
+
+        <!-- Dynamic Live Relic Telemetry Card -->
+        <div id="landing-telemetry-card" class="landing-telemetry-card">
+          <div class="telemetry-card-header">
+            <span class="telemetry-live-dot"></span>
+            <span id="telemetry-relic-title" class="telemetry-relic-title">Apollo 11 Lunar Module (Eagle)</span>
+            <span id="telemetry-relic-status" class="telemetry-relic-pill">Historic Monument</span>
+          </div>
+          <div class="telemetry-grid">
+            <div class="telemetry-col">
+              <span class="tel-lbl">Location / Target</span>
+              <span id="tel-location" class="tel-val">Mare Tranquillitatis, Moon (0.674° N, 23.473° E)</span>
+            </div>
+            <div class="telemetry-col">
+              <span class="tel-lbl">Touchdown Epoch</span>
+              <span id="tel-epoch" class="tel-val">July 20, 1969 &bull; 20:17:40 UTC</span>
+            </div>
+            <div class="telemetry-col">
+              <span class="tel-lbl">Archaeological Role</span>
+              <span id="tel-role" class="tel-val">Humanity's first crewed extraterrestrial landing site</span>
+            </div>
+          </div>
+        </div>
+
         <div id="landing-active-model-name" class="landing-active-model-caption">
           Featured: Apollo 11 Lunar Module Descent Stage (Mare Tranquillitatis, 1969)
         </div>
@@ -113,7 +172,7 @@
       <div class="landing-cta-section">
         <h1 class="landing-title">Every machine has a story. Ready to find them?</h1>
         <p class="landing-description">
-          Built for the 2026 NASA Space Apps Challenge. Drag to spin the lander or enter the Space Map.
+          Built for the 2026 NASA Space Apps Challenge. Explore 66 verified pieces of hardware left behind on the Moon and Mars with real NASA 3D models and JPL Horizons orbital dynamics.
         </p>
 
         <!-- The Big Red 3D Button -->
@@ -123,7 +182,7 @@
           <div class="btn-red-shine"></div>
         </button>
 
-        <p class="landing-subtext">Built for the 2026 NASA Space Apps Challenge.</p>
+        <p class="landing-subtext">Click above or press <kbd>Enter</kbd> to launch the Interactive Solar System Map.</p>
 
         <!-- Key Platform Metrics Bar -->
         <div class="landing-stats-row">
@@ -147,8 +206,158 @@
       </div>
 
     </div>
-  </section>
 
+    <!-- ================= LANDING SECTION 2: INTELLECTUAL MANIFESTO ================= -->
+    <section id="landing-manifesto" class="landing-manifesto-section">
+      <div class="manifesto-inner">
+        <div class="section-tag-row">
+          <span class="manifesto-tag">✦ The Science of Space Archaeology</span>
+        </div>
+        <h2 class="manifesto-title">Not Space Junk — Humanity's Enduring Monuments</h2>
+        <p class="manifesto-lead">
+          When an off-world robotic explorer transmits its final ping, its scientific journey does not end. 
+          Under the vacuum of the lunar regolith and the dry winds of Mars, these 66 machines remain preserved as pristine physical records of human ingenuity, international courage, and technological lineage.
+        </p>
+
+        <div class="manifesto-pillars-grid">
+          <div class="pillar-card">
+            <div class="pillar-icon">🏛️</div>
+            <h3>Extraterrestrial Cultural Heritage</h3>
+            <p>From Tranquility Base to Jezero Crater, discarded lander stages and rovers represent the physical genesis of human interplanetary civilization under the UN Outer Space Treaty.</p>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-icon">📡</div>
+            <h3>Enduring Physical Science</h3>
+            <p>Instruments like the Apollo 11, 14, and 15 Laser Retroreflectors require zero electricity, yet still bounce Earth-fired lasers back today to test Einstein's General Relativity with millimeter precision.</p>
+          </div>
+          <div class="pillar-card">
+            <div class="pillar-icon">🛰️</div>
+            <h3>Rigorous Ephemeris & Telemetry</h3>
+            <p>Direct integration with the NASA JPL Horizons system and high-resolution NASA Trek satellite WMTS streaming ensures sub-arcsecond accuracy across 60 years of spaceflight.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= LANDING SECTION 3: THE QUANTA_CAT MISSION CREW ================= -->
+    <section id="landing-team-section" class="landing-team-section" aria-label="QUANTA_CAT Team Members">
+      <div class="team-inner-container">
+        <div class="section-tag-row">
+          <span class="manifesto-tag">🐱⚡ Mission Specialists</span>
+        </div>
+        <h2 class="team-section-title">The QUANTA_CAT Crew</h2>
+        <p class="team-section-subtitle">
+          The multidisciplinary engineering, planetary science, and narrative team behind Space Archaeologists.
+        </p>
+
+        <div class="team-crew-grid">
+          <!-- Member 1: Dr. Elena Vance -->
+          <div class="crew-card card-cyan">
+            <div class="crew-avatar-wrapper">
+              <img src="/images/team/avatar_elena.svg" alt="Dr. Elena Vance" class="crew-avatar" />
+              <span class="crew-callsign">LEAD</span>
+            </div>
+            <div class="crew-info">
+              <h3 class="crew-name">Dr. Elena Vance</h3>
+              <p class="crew-role">Lead Systems Architect & Ephemeris Engineer</p>
+              <div class="crew-tags">
+                <span>NASA JPL Horizons</span>
+                <span>FastAPI Telemetry</span>
+                <span>Orbital Dynamics</span>
+              </div>
+              <p class="crew-bio">
+                Engineered the sub-arcsecond coordinate pipelines converting NASA Horizons ephemeris data into smooth solar orbital motions and verified telemetry integrity across all 66 planetary artifacts.
+              </p>
+              <blockquote class="crew-quote">
+                &ldquo;Telemetry is memory; preserving coordinates preserves the human courage that placed them there.&rdquo;
+              </blockquote>
+            </div>
+          </div>
+
+          <!-- Member 2: Kaelen Voss -->
+          <div class="crew-card card-purple">
+            <div class="crew-avatar-wrapper">
+              <img src="/images/team/avatar_kaelen.svg" alt="Kaelen Voss" class="crew-avatar" />
+              <span class="crew-callsign">3D / UX</span>
+            </div>
+            <div class="crew-info">
+              <h3 class="crew-name">Kaelen Voss</h3>
+              <p class="crew-role">3D WebGL & Real-Time Graphics Specialist</p>
+              <div class="crew-tags">
+                <span>WebGL PBR</span>
+                <span>Google Model-Viewer</span>
+                <span>Web Audio API</span>
+              </div>
+              <p class="crew-bio">
+                Crafted the tactile 3D Inspection Deck, procedural Web Audio telemetry soundscapes, and real-time PBR lighting environments for Apollo, Perseverance, and Viking lander meshes.
+              </p>
+              <blockquote class="crew-quote">
+                &ldquo;Every polygon and shader is tuned to make young minds feel the weight and tactile reality of deep space.&rdquo;
+              </blockquote>
+            </div>
+          </div>
+
+          <!-- Member 3: Aria Chen -->
+          <div class="crew-card card-gold">
+            <div class="crew-avatar-wrapper">
+              <img src="/images/team/avatar_aria.svg" alt="Aria Chen" class="crew-avatar" />
+              <span class="crew-callsign">ARCHAEOLOGY</span>
+            </div>
+            <div class="crew-info">
+              <h3 class="crew-name">Aria Chen</h3>
+              <p class="crew-role">Planetary Archaeologist & Senior Archivist</p>
+              <div class="crew-tags">
+                <span>NASA Moon & Mars Trek</span>
+                <span>LROC & HiRISE</span>
+                <span>Heritage Treaty</span>
+              </div>
+              <p class="crew-bio">
+                Curated high-resolution satellite mosaic tiles from NASA Trek, cataloged physical hardware degradation states, and researched UN Outer Space Treaty heritage protection protocols.
+              </p>
+              <blockquote class="crew-quote">
+                &ldquo;These machines are humanity's pyramids on alien worlds—silent, enduring, and sacred.&rdquo;
+              </blockquote>
+            </div>
+          </div>
+
+          <!-- Member 4: Marcus Reyes -->
+          <div class="crew-card card-emerald">
+            <div class="crew-avatar-wrapper">
+              <img src="/images/team/avatar_marcus.svg" alt="Marcus Reyes" class="crew-avatar" />
+              <span class="crew-callsign">PEDAGOGY</span>
+            </div>
+            <div class="crew-info">
+              <h3 class="crew-name">Marcus Reyes</h3>
+              <p class="crew-role">Science Narrative Director & Educational Technologist</p>
+              <div class="crew-tags">
+                <span>Dual-Tier Pedagogy</span>
+                <span>Voice Synthesis</span>
+                <span>Interactive Labs</span>
+              </div>
+              <p class="crew-bio">
+                Designed the Explorer (ages 7–10) and Commander (ages 11–16) cognitive frameworks, natural voice narration scripts, and physics interactive demonstration labs.
+              </p>
+              <blockquote class="crew-quote">
+                &ldquo;Inspiring the next generation requires meeting curiosity with both scientific rigor and wonder.&rdquo;
+              </blockquote>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Launch CTA Banner -->
+        <div class="team-launch-card">
+          <div class="team-launch-text">
+            <h3>Ready to explore humanity's greatest footprints?</h3>
+            <p>Descend from solar orbit onto high-resolution Moon and Mars surface maps.</p>
+          </div>
+          <button class="btn-enter-space-map btn-secondary-launch" onclick="window.landingPage?.close()" aria-label="Launch Space Map">
+            <span>🚀</span> Launch Mission Map
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </section>
 
   <!-- ================= VIEW 1: SOLAR SYSTEM NAVIGATOR ================= -->
   <canvas id="space-canvas"></canvas>

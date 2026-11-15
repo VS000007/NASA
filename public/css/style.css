@@ -6220,13 +6220,575 @@ model-viewer {
   color: #fff !important;
 }
 
+/* ==========================================================================
+   QUANTA_CAT CORNER BANNER & ENHANCED LANDING INTERACTIVITY
+   ========================================================================== */
+
+/* QUANTA_CAT Animated Corner Presentation Badge */
+.landing-quanta-banner {
+  position: fixed;
+  top: 1.25rem;
+  left: 1.5rem;
+  z-index: 5200;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(10, 17, 36, 0.88);
+  border: 1px solid rgba(0, 229, 255, 0.45);
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.2), inset 0 0 14px rgba(168, 85, 247, 0.15);
+  backdrop-filter: blur(18px);
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: floatSubtle 4s ease-in-out infinite alternate;
+}
+
+.landing-quanta-banner:hover {
+  transform: translateY(-2px) scale(1.03);
+  border-color: #00e5ff;
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.4), inset 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.quanta-cat-glyph {
+  font-size: 1.15rem;
+  filter: drop-shadow(0 0 6px rgba(244, 63, 94, 0.6));
+}
+
+.quanta-text-stack {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.quanta-brand {
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, #ffffff 30%, #38bdf8 70%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+}
+
+.quanta-presents {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  letter-spacing: 0.04em;
+}
+
+.quanta-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 10px #38bdf8;
+  animation: pulseDot 1.8s infinite ease-in-out;
+}
+
+@keyframes floatSubtle {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-4px); }
+}
+
+/* Landing Header Nav Links */
+.landing-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.landing-nav-link {
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.landing-nav-link:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Enhanced 3D Stage Camera Toolbar */
+.landing-camera-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(10, 15, 30, 0.82);
+  border: 1px solid var(--border-glass);
+  backdrop-filter: blur(14px);
+  padding: 4px 6px;
+  border-radius: 10px;
+  z-index: 10;
+}
+
+.cam-preset-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #94a3b8;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-family: var(--font-main);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+
+.cam-preset-btn:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cam-preset-btn.active {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: rgba(0, 229, 255, 0.4);
+  color: var(--accent-cyan);
+}
+
+/* Dynamic Live Relic Telemetry Card */
+.landing-telemetry-card {
+  width: 100%;
+  max-width: 580px;
+  background: rgba(10, 17, 36, 0.82);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin-top: 10px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.telemetry-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.telemetry-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.telemetry-relic-title {
+  font-family: var(--font-title);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #f8fafc;
+  flex: 1;
+}
+
+.telemetry-relic-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+.telemetry-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.tel-lbl {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.tel-val {
+  font-size: 0.76rem;
+  color: #e2e8f0;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   LANDING MANIFESTO SECTION
+   ========================================================================== */
+.landing-manifesto-section {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding: 4.5rem 2rem 3rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, transparent 0%, rgba(10, 17, 36, 0.7) 100%);
+}
+
+.manifesto-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-tag-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.8rem;
+}
+
+.manifesto-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent-cyan);
+  background: rgba(0, 229, 255, 0.08);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 229, 255, 0.25);
+}
+
+.manifesto-title {
+  font-family: var(--font-title);
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #ffffff 40%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.manifesto-lead {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #94a3b8;
+  max-width: 820px;
+  margin: 0 auto 3rem auto;
+}
+
+.manifesto-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.pillar-card {
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid var(--border-glass);
+  border-radius: 16px;
+  padding: 1.75rem;
+  backdrop-filter: blur(14px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pillar-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(56, 189, 248, 0.15);
+}
+
+.pillar-icon {
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.pillar-card h3 {
+  font-family: var(--font-title);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 0.6rem;
+}
+
+.pillar-card p {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #94a3b8;
+}
+
+/* ==========================================================================
+   QUANTA_CAT MISSION CREW SHOWCASE
+   ========================================================================== */
+.landing-team-section {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding: 3rem 2rem 5rem 2rem;
+  background: rgba(3, 7, 18, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.team-inner-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.team-section-title {
+  font-family: var(--font-title);
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.team-section-subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #94a3b8;
+  max-width: 600px;
+  margin: 0 auto 3rem auto;
+}
+
+.team-crew-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3.5rem;
+}
+
+.crew-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--border-glass);
+  border-radius: 18px;
+  padding: 1.75rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(16px);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.crew-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--border-glass), transparent);
+}
+
+.crew-card.card-cyan:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 229, 255, 0.4);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 229, 255, 0.2);
+}
+.crew-card.card-cyan::before {
+  background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+}
+
+.crew-card.card-purple:hover {
+  transform: translateY(-5px);
+  border-color: rgba(192, 132, 252, 0.4);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(192, 132, 252, 0.2);
+}
+.crew-card.card-purple::before {
+  background: linear-gradient(90deg, transparent, #c084fc, transparent);
+}
+
+.crew-card.card-gold:hover {
+  transform: translateY(-5px);
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(251, 191, 36, 0.2);
+}
+.crew-card.card-gold::before {
+  background: linear-gradient(90deg, transparent, #fbbf24, transparent);
+}
+
+.crew-card.card-emerald:hover {
+  transform: translateY(-5px);
+  border-color: rgba(52, 211, 153, 0.4);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(52, 211, 153, 0.2);
+}
+.crew-card.card-emerald::before {
+  background: linear-gradient(90deg, transparent, #34d399, transparent);
+}
+
+.crew-avatar-wrapper {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 1.1rem auto;
+}
+
+.crew-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.crew-callsign {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 15, 30, 0.95);
+  border: 1px solid var(--border-glass);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.crew-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  text-align: center;
+}
+
+.crew-name {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.crew-role {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  margin-bottom: 0.85rem;
+  min-height: 2.2rem;
+}
+
+.crew-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 0.9rem;
+}
+
+.crew-tags span {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.crew-bio {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #94a3b8;
+  margin-bottom: 1.1rem;
+  text-align: left;
+  flex: 1;
+}
+
+.crew-quote {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--accent-cyan);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0 8px 8px 0;
+  text-align: left;
+  margin: 0;
+}
+
+/* Bottom Launch CTA Card */
+.team-launch-card {
+  background: radial-gradient(circle at center, rgba(14, 165, 233, 0.15) 0%, rgba(15, 23, 42, 0.8) 70%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(56, 189, 248, 0.15);
+}
+
+.team-launch-text h3 {
+  font-family: var(--font-title);
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.3rem;
+}
+
+.team-launch-text p {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+.btn-secondary-launch {
+  padding: 14px 28px !important;
+  font-size: 1rem !important;
+}
+
 /* Mobile Responsiveness for Landing Page */
 @media (max-width: 768px) {
+  .landing-quanta-banner {
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.35rem 0.8rem;
+  }
+  .quanta-brand {
+    font-size: 0.75rem;
+  }
   .landing-top-bar {
-    padding: 1rem 1.2rem;
+    padding: 3.5rem 1rem 1rem 1rem;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .landing-camera-toolbar {
+    top: 8px;
+    right: 8px;
+    flex-wrap: wrap;
+    max-width: 220px;
   }
   .landing-model-viewport {
-    height: 250px;
+    height: 270px;
   }
   .btn-enter-space-map {
     width: 100%;
@@ -6238,5 +6800,10 @@ model-viewer {
   }
   .stat-badge {
     padding: 6px 12px;
+  }
+  .team-launch-card {
+    padding: 1.5rem;
+    text-align: center;
+    justify-content: center;
   }
 }

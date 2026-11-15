@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="bgA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="glowA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="60" fill="url(#bgA)"/>
+  <circle cx="60" cy="60" r="56" fill="none" stroke="url(#glowA)" stroke-width="2.5" stroke-dasharray="10 4"/>
+  <!-- Helmet / Visor Shape -->
+  <circle cx="60" cy="52" r="24" fill="#0f172a" stroke="#fbbf24" stroke-width="2"/>
+  <path d="M42 54 C42 40 78 40 78 54 C78 62 42 62 42 54 Z" fill="url(#glowA)" opacity="0.85"/>
+  <ellipse cx="50" cy="48" rx="4" ry="2" fill="#ffffff" opacity="0.8"/>
+  <!-- Shoulders / Suit -->
+  <path d="M30 100 C30 80 44 76 60 76 C76 76 90 80 90 100 Z" fill="#1e293b" stroke="#fbbf24" stroke-width="2"/>
+  <circle cx="60" cy="85" r="4" fill="#fbbf24"/>
+</svg>
