@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "$comment": "QUANTA_CAT Space Archaeologists Vercel Configuration",
   "functions": {
     "api/index.py": {
       "includeFiles": "data/**"

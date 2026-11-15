@@ -1,3 +1,4 @@
+# NASA Space Archaeologists 3D Model Asset Ingestion - Team QUANTA_CAT
 import urllib.request
 import urllib.parse
 from pathlib import Path

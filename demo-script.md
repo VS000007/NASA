@@ -79,4 +79,6 @@
 
 ---
 
-**Total runtime: ~3 minutes**
+**Total runtime: ~3 minutes**  
+*Verified for Team QUANTA_CAT Space Archaeologists Mission Live Demo*
+

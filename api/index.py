@@ -1,3 +1,4 @@
+# NASA Space Archaeologists - Vercel Serverless Entrypoint (Team QUANTA_CAT)
 import sys
 from pathlib import Path
 

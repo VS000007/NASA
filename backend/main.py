@@ -1,3 +1,4 @@
+# NASA Space Archaeologists Backend Service - Team QUANTA_CAT
 import os
 from pathlib import Path
 from fastapi import FastAPI

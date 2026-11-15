@@ -155,3 +155,7 @@ This project follows WCAG 2.1 Level AA guidelines:
 
 All NASA imagery and data are public domain per [NASA Media Usage Guidelines](https://www.nasa.gov/nasa-brand-center/images-and-media/).
 Project code is open source.
+
+---
+*Team QUANTA_CAT • Space Archaeologists Mission System (2026)*
+

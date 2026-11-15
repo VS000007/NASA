@@ -1,3 +1,4 @@
+# QUANTA_CAT Space Archaeologists Analysis Tool
 import json
 
 with open('data/objects.json', 'r', encoding='utf-8') as f:

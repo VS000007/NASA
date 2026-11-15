@@ -2,6 +2,13 @@
 
 All notable changes to the Space Archaeologists project.
 
+## [2.2.0] — 2026-11-15
+
+### 🚀 Space Archaeologists 3-Stage Mission Flow & 3D Deck
+- Integrated QUANTA_CAT Mission Storytelling Guide with audio narration & full 6-slide progression.
+- Added tactile 3D Inspection Deck with Apollo 11, Perseverance, and Ingenuity models and smooth transitions.
+- Synchronized team dossier and planetary archive assets for live evaluation.
+
 ## [2.1.0] — 2026-11-14
 
 ### ✨ Flagship Interactive Features

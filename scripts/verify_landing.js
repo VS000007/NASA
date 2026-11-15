@@ -1,3 +1,4 @@
+// NASA Space Archaeologists - Team QUANTA_CAT Landing Verification Suite
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
