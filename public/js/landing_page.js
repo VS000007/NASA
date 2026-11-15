@@ -38,24 +38,35 @@ class LandingPageController {
     this.enterBtn = document.getElementById('btn-enter-space-map');
     this.skipLink = document.getElementById('landing-skip-link');
     this.modelViewer = document.getElementById('landing-model-viewer');
-    this.modelCaption = document.getElementById('landing-active-model-name');
-    this.selectorPills = document.querySelectorAll('.model-select-pill');
-    this.camPresetBtns = document.querySelectorAll('.cam-preset-btn');
-    this.autoRotateBtn = document.getElementById('btn-landing-autorotate');
+    this.modelCaption = document.getElementById('landing-model-name');
     this.quantaBanner = document.getElementById('landing-quanta-banner');
     this.nebulaGlow = document.querySelector('.landing-nebula-glow');
     this.starsBg = document.querySelector('.landing-stars');
 
-    // Telemetry HUD elements
-    this.telTitle = document.getElementById('telemetry-relic-title');
-    this.telStatus = document.getElementById('telemetry-relic-status');
-    this.telLocation = document.getElementById('tel-location');
-    this.telEpoch = document.getElementById('tel-epoch');
-    this.telRole = document.getElementById('tel-role');
+    // 3 Primary Models for Automatic Slow 4s Slide Transition
+    this.modelsList = [
+      {
+        name: '🌕 Apollo 11 Lunar Module (Moon \u2022 1969)',
+        src: '/models/apollo_lunar_module.glb',
+        alt: 'Apollo 11 Lunar Module Descent Stage'
+      },
+      {
+        name: '🔴 Perseverance Rover (Mars \u2022 2021)',
+        src: '/models/perseverance_rover.glb',
+        alt: 'Perseverance Rover'
+      },
+      {
+        name: '🚁 Ingenuity Helicopter (Mars \u2022 2021)',
+        src: '/models/ingenuity_helicopter.glb',
+        alt: 'Ingenuity Mars Helicopter'
+      }
+    ];
+    this.currentModelIndex = 0;
+    this.modelSlideTimer = null;
+    this.isUserInteractingWithModel = false;
 
     this.audioCtx = null;
     this.isOpen = false;
-    this.isAutoRotating = true;
 
     // Relic Telemetry Metadata Matrix
     this.relicTelemetry = {
@@ -320,45 +331,38 @@ class LandingPageController {
       }
     });
 
-    // 3. 3D Relic Selector Pills
-    this.selectorPills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        const modelUrl = pill.getAttribute('data-model');
-        const relicKey = pill.getAttribute('data-relic');
-        const modelName = pill.getAttribute('data-name');
-        this.switchModel(modelUrl, modelName, relicKey, pill);
-      });
-    });
-
-    // 4. Interactive 3D Camera Toolbar Presets
-    this.camPresetBtns.forEach(btn => {
-      if (btn.id === 'btn-landing-autorotate') return;
-      btn.addEventListener('click', () => {
-        const orbit = btn.getAttribute('data-orbit');
-        if (orbit && this.modelViewer) {
-          this.modelViewer.cameraOrbit = orbit;
-          this.camPresetBtns.forEach(b => {
-            if (b.id !== 'btn-landing-autorotate') b.classList.remove('active');
-          });
-          btn.classList.add('active');
-          this.playBlipSound(640);
+    // 3. 3D Model Auto-Slide Indicator Dots Click & User Interaction Pause
+    const slideDots = document.querySelectorAll('.slide-dot');
+    slideDots.forEach(dot => {
+      dot.addEventListener('click', (e) => {
+        const idx = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+        if (!isNaN(idx)) {
+          this.transitionToModel(idx);
+          this.playBlipSound(580);
+          // Reset 4s auto timer
+          this.startModelAutoSlide();
         }
       });
     });
 
-    // 5. Auto-rotation toggle
-    if (this.autoRotateBtn && this.modelViewer) {
-      this.autoRotateBtn.addEventListener('click', () => {
-        this.isAutoRotating = !this.isAutoRotating;
-        if (this.isAutoRotating) {
-          this.modelViewer.setAttribute('auto-rotate', '');
-          this.autoRotateBtn.classList.add('active');
-        } else {
-          this.modelViewer.removeAttribute('auto-rotate');
-          this.autoRotateBtn.classList.remove('active');
-        }
-        this.playBlipSound(this.isAutoRotating ? 720 : 420);
-      });
+    // Pause auto-slide while user inspects 3D model, resume 4s after interaction
+    if (this.modelViewer) {
+      let pauseTimeout = null;
+      const onInteractionStart = () => {
+        this.isUserInteractingWithModel = true;
+        clearTimeout(pauseTimeout);
+      };
+      const onInteractionEnd = () => {
+        clearTimeout(pauseTimeout);
+        pauseTimeout = setTimeout(() => {
+          this.isUserInteractingWithModel = false;
+        }, 4000);
+      };
+
+      this.modelViewer.addEventListener('pointerdown', onInteractionStart, { passive: true });
+      this.modelViewer.addEventListener('pointerup', onInteractionEnd, { passive: true });
+      this.modelViewer.addEventListener('touchstart', onInteractionStart, { passive: true });
+      this.modelViewer.addEventListener('touchend', onInteractionEnd, { passive: true });
     }
 
     // 6. QUANTA_CAT Corner Badge & Team Openers Click
@@ -433,30 +437,55 @@ class LandingPageController {
     }, { passive: true });
   }
 
-  switchModel(modelUrl, modelName, relicKey, activePill) {
-    if (!this.modelViewer) return;
+  /* ---------------- 3D MODEL AUTO-SLIDESHOW (4S SLOW TRANSITION) ---------------- */
 
-    this.selectorPills.forEach(p => p.classList.remove('active'));
-    if (activePill) activePill.classList.add('active');
+  startModelAutoSlide() {
+    this.stopModelAutoSlide();
+    this.modelSlideTimer = setInterval(() => {
+      if (this.isUserInteractingWithModel) return;
+      this.nextModelSlide();
+    }, 4000);
+  }
 
-    // Update 3D model viewer
-    this.modelViewer.setAttribute('src', modelUrl);
-    if (this.modelCaption) {
-      this.modelCaption.textContent = `Featured: ${modelName}`;
+  stopModelAutoSlide() {
+    if (this.modelSlideTimer) {
+      clearInterval(this.modelSlideTimer);
+      this.modelSlideTimer = null;
     }
+  }
 
-    // Update Telemetry Specs HUD
-    const meta = this.relicTelemetry[relicKey];
-    if (meta) {
-      if (this.telTitle) this.telTitle.textContent = meta.title;
-      if (this.telStatus) this.telStatus.textContent = meta.status;
-      if (this.telLocation) this.telLocation.textContent = meta.location;
-      if (this.telEpoch) this.telEpoch.textContent = meta.epoch;
-      if (this.telRole) this.telRole.textContent = meta.role;
-    }
+  nextModelSlide() {
+    const nextIdx = (this.currentModelIndex + 1) % this.modelsList.length;
+    this.transitionToModel(nextIdx);
+  }
 
-    // High-tech switch sound
-    this.playBlipSound(580);
+  transitionToModel(index) {
+    if (!this.modelViewer || index < 0 || index >= this.modelsList.length) return;
+    this.currentModelIndex = index;
+    const model = this.modelsList[index];
+
+    // Slow cinematic slide out (0.4s)
+    this.modelViewer.classList.add('model-slide-out');
+
+    setTimeout(() => {
+      this.modelViewer.setAttribute('src', model.src);
+      this.modelViewer.setAttribute('alt', model.alt);
+
+      const nameEl = document.getElementById('landing-model-name');
+      if (nameEl) nameEl.textContent = model.name;
+
+      const dots = document.querySelectorAll('.slide-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+
+      this.modelViewer.classList.remove('model-slide-out');
+      this.modelViewer.classList.add('model-slide-in');
+
+      setTimeout(() => {
+        this.modelViewer.classList.remove('model-slide-in');
+      }, 800);
+    }, 400);
   }
 
   exposeGlobalAPI() {
@@ -464,6 +493,7 @@ class LandingPageController {
     window.closeLandingPage = () => this.close();
     window.openStoryGuide = () => this.openStoryGuide();
     window.advanceToDeck = () => this.advanceToDeck();
+    window.transitionToModel = (idx) => this.transitionToModel(idx);
     window.landingPage = this;
   }
 
@@ -493,6 +523,9 @@ class LandingPageController {
     this.screen.scrollTop = 0;
     document.body.style.overflow = 'hidden';
 
+    // Start 4s automatic 3D model slideshow
+    this.startModelAutoSlide();
+
     if (window.history.replaceState) {
       window.history.replaceState(null, null, '#deck');
     }
@@ -501,6 +534,7 @@ class LandingPageController {
   close(immediate = false) {
     if (!this.screen) return;
     this.isOpen = false;
+    this.stopModelAutoSlide();
 
     if (immediate) {
       this.screen.classList.remove('active', 'dismissing');

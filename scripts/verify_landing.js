@@ -63,6 +63,10 @@ server.listen(8099, async () => {
                          resHtml.data.includes('badge-emerald">PK') && 
                          resHtml.data.includes('badge-violet">SS');
 
+    // Model Selector Bar Removed & 4s Auto-Slide Indicator Added
+    const hasNoOldSelectorBar = !resHtml.data.includes('landing-model-selector');
+    const hasSlideIndicator = resHtml.data.includes('landing-slide-indicator') && resHtml.data.includes('slide-dot');
+
     // Confirm no photos used in team modal
     const modalSlice = resHtml.data.substring(resHtml.data.indexOf('id="quanta-team-modal"'), resHtml.data.indexOf('</section>'));
     const modalHasNoPhotos = !modalSlice.includes('<img');
@@ -73,6 +77,8 @@ server.listen(8099, async () => {
     console.log('- Stage 1: Proceed to Deck Button:', hasProceedBtn);
     console.log('- Stage 1: Re-open Story Guide in HUD:', hasStoryGuideBtn);
     console.log('- Stage 2: QUANTA_CAT presents ...... Banner:', hasQuanta);
+    console.log('- 3D Model Old Selector Bar Removed:', hasNoOldSelectorBar);
+    console.log('- 3D Model 4s Auto-Slide Indicator Added:', hasSlideIndicator);
     console.log('- Team Member 1 (Varnit Sharma @quanta_cat):', hasVarnit);
     console.log('- Team Member 2 (Harshika Kaushik @harshika_kaushik):', hasHarshika);
     console.log('- Team Member 3 (Anushri Yadav @anushri_08):', hasAnushri);
@@ -86,13 +92,17 @@ server.listen(8099, async () => {
     const resCss = await httpGet('http://localhost:8099/css/style.css');
     const hasNetlifyCss = resCss.data.includes('.netlify-guide-stage');
     const hasCapsuleCss = resCss.data.includes('.landing-team-capsule');
+    const hasSlideCss = resCss.data.includes('slideInModel') && resCss.data.includes('.landing-slide-indicator');
     console.log('- CSS contains .netlify-guide-stage:', hasNetlifyCss);
     console.log('- CSS contains .landing-team-capsule:', hasCapsuleCss);
+    console.log('- CSS contains 3D model slide animations:', hasSlideCss);
 
     // Check JS controller
     const resJs = await httpGet('http://localhost:8099/js/landing_page.js');
     const hasAdvanceMethods = resJs.data.includes('advanceToDeck') && resJs.data.includes('openStoryGuide');
+    const hasAutoSlideJs = resJs.data.includes('startModelAutoSlide') && resJs.data.includes('transitionToModel');
     console.log('- JS contains 3-stage transitions:', hasAdvanceMethods);
+    console.log('- JS contains 4s 3D Model Auto-Slide:', hasAutoSlideJs);
 
     server.close();
     process.exit(0);

@@ -23,7 +23,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 
   <!-- Main Styling -->
-  <link rel="stylesheet" href="/css/style.css?v=quanta2026_5">
+  <link rel="stylesheet" href="/css/style.css?v=quanta2026_6">
 </head>
 <body>
 
@@ -131,23 +131,14 @@
           </model-viewer>
         </div>
 
-        <!-- 3D Relic Selector Pills -->
-        <div class="landing-model-selector" role="group" aria-label="Select 3D Relic to Inspect">
-          <button class="model-select-pill active" data-model="/models/apollo_lunar_module.glb" data-relic="apollo11" data-name="Apollo 11 Lunar Module (Moon &bull; 1969)">
-            <span>🌕</span> Apollo 11 Lander
-          </button>
-          <button class="model-select-pill" data-model="/models/perseverance_rover.glb" data-relic="perseverance" data-name="Perseverance Rover (Mars &bull; 2021)">
-            <span>🔴</span> Perseverance Rover
-          </button>
-          <button class="model-select-pill" data-model="/models/ingenuity_helicopter.glb" data-relic="ingenuity" data-name="Ingenuity Helicopter (Mars &bull; 2021)">
-            <span>🚁</span> Ingenuity Helicopter
-          </button>
-          <button class="model-select-pill" data-model="/models/viking_lander.glb" data-relic="viking" data-name="Viking 1 Lander (Mars &bull; 1976)">
-            <span>🛰️</span> Viking 1 Lander
-          </button>
-          <button class="model-select-pill" data-model="/models/opportunity_rover.glb" data-relic="opportunity" data-name="Opportunity Rover (Mars &bull; 2004)">
-            <span>☀️</span> Opportunity Rover
-          </button>
+        <!-- Elegant 3-Model Auto-Slide Indicator (Slow 4s Transition) -->
+        <div class="landing-slide-indicator" id="landing-slide-indicator" aria-live="polite">
+          <div class="slide-dots-group">
+            <button class="slide-dot active" data-index="0" title="Apollo 11 Lunar Module"></button>
+            <button class="slide-dot" data-index="1" title="Perseverance Mars Rover"></button>
+            <button class="slide-dot" data-index="2" title="Ingenuity Mars Helicopter"></button>
+          </div>
+          <span class="slide-relic-name" id="landing-model-name">🌕 Apollo 11 Lunar Module (Moon &bull; 1969)</span>
         </div>
       </div>
 
@@ -698,7 +689,7 @@
   <script src="/js/interactive_lab.js"></script>
   <script src="/js/guided_tour.js"></script>
   <script src="/js/forgotten_explorers.js"></script>
-  <script src="/js/landing_page.js?v=quanta2026_5"></script>
+  <script src="/js/landing_page.js?v=quanta2026_6"></script>
 
 </body>
 </html>

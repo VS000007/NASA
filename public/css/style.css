@@ -5994,50 +5994,87 @@ model-viewer {
   height: 100%;
   --poster-color: transparent;
   outline: none;
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.8s ease;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
 }
 
-.landing-drag-hint {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(3, 7, 18, 0.75);
-  border: 1px solid var(--border-glass);
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.72rem;
-  color: var(--text-secondary);
-  pointer-events: none;
-  backdrop-filter: blur(4px);
+#landing-model-viewer.model-slide-out {
+  opacity: 0;
+  transform: translateY(16px) scale(0.92);
+  filter: blur(8px);
 }
 
-/* Model Selector Pills */
-.landing-model-selector {
+#landing-model-viewer.model-slide-in {
+  animation: slideInModel 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes slideInModel {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.92);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+/* Elegant 3-Model Auto-Slide Indicator */
+.landing-slide-indicator {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  max-width: 900px;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 0 12px rgba(56, 189, 248, 0.08);
+  border-radius: 9999px;
+  padding: 5px 16px;
+  backdrop-filter: blur(10px);
+  margin-top: -2px;
+  transition: all 0.3s ease;
 }
 
-.model-select-pill {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid var(--border-glass);
-  color: #cbd5e1;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
+.slide-dots-group {
+  display: flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s ease;
-  backdrop-filter: blur(6px);
 }
 
-.model-select-pill:hover {
+.slide-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(148, 163, 184, 0.35);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slide-dot:hover {
+  background: rgba(56, 189, 248, 0.6);
+}
+
+.slide-dot.active {
+  width: 22px;
+  background: linear-gradient(90deg, #38bdf8, #00e5ff);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+
+.slide-relic-name {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 0.03em;
+  transition: opacity 0.4s ease;
+}
   background: rgba(56, 189, 248, 0.15);
   border-color: rgba(56, 189, 248, 0.4);
   color: #fff;
