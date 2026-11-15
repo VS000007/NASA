@@ -240,7 +240,7 @@ class LandingPageController {
         this.guideStage.style.display = 'none';
         this.isGuideActive = false;
         this.open();
-      }, 550);
+      }, 320);
     } else {
       this.open();
     }

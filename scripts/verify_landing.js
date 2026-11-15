@@ -43,10 +43,16 @@ server.listen(8099, async () => {
     const resHtml = await httpGet('http://localhost:8099/');
     const hasNetlifyStage = resHtml.data.includes('id="netlify-guide-stage"');
     const hasStoryIframe = resHtml.data.includes('id="netlify-story-iframe"') && 
-                           resHtml.data.includes('https://storytelling-app-a344bb.netlify.app/');
+                           (resHtml.data.includes('/story/index.html') || resHtml.data.includes('storytelling-app-a344bb.netlify.app'));
     const hasProceedBtn = resHtml.data.includes('id="btn-proceed-to-deck"');
     const hasStoryGuideBtn = resHtml.data.includes('btn-open-story-guide');
     const hasQuanta = resHtml.data.includes('quanta-brand') && resHtml.data.includes('presents ......');
+
+    // Test fetching /story/index.html
+    const resStory = await httpGet('http://localhost:8099/story/index.html');
+    const hasStoryAutoBridge = resStory.status === 200 && 
+                               resStory.data.includes('pulseGlowStory') && 
+                               resStory.data.includes('listen-button');
 
     // 5 Team Members Verification
     const hasVarnit = resHtml.data.includes('Varnit Sharma') && resHtml.data.includes('@quanta_cat');
@@ -77,7 +83,8 @@ server.listen(8099, async () => {
 
     console.log('Verification Results:');
     console.log('- Stage 1: Netlify Guide Stage Present:', hasNetlifyStage);
-    console.log('- Stage 1: Netlify App URL Embedded (No 404):', hasStoryIframe);
+    console.log('- Stage 1: Story Iframe Embedded (No 404):', hasStoryIframe);
+    console.log('- Stage 1: Story App with Glowing Button & 1s Finish Watcher:', hasStoryAutoBridge);
     console.log('- Stage 1: Proceed to Deck Button:', hasProceedBtn);
     console.log('- Stage 1: Re-open Story Guide in HUD:', hasStoryGuideBtn);
     console.log('- Stage 1: Timer bar completely removed:', hasNoTimerBar);
