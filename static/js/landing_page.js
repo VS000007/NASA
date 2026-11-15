@@ -17,20 +17,16 @@ class LandingPageController {
     // Stage 1: Netlify Storytelling Guide elements
     this.guideStage = document.getElementById('netlify-guide-stage');
     this.btnProceedDeck = document.getElementById('btn-proceed-to-deck');
-    this.btnSkipMapDirect = document.getElementById('btn-skip-to-map-direct');
-    this.guideProgressBar = document.getElementById('guide-progress-bar');
-    this.guideCountdownSecs = document.getElementById('guide-countdown-seconds');
-    this.btnGuideToggleTimer = document.getElementById('btn-guide-toggle-timer');
-    this.guideTimerIcon = document.getElementById('guide-timer-icon');
     this.btnTopStoryGuide = document.getElementById('btn-top-story-guide');
     this.btnOpenStoryGuide = document.getElementById('btn-open-story-guide');
     this.guideIframe = document.getElementById('netlify-story-iframe');
 
-    // Stage 1 Auto-advance Timer State
-    this.timerDuration = 14; // seconds for mission storytelling intro
-    this.timerRemaining = 14;
-    this.timerInterval = null;
-    this.isTimerPaused = false;
+    // Stage 1 Automatic Narration & Story Presentation Flow
+    // The storytelling presentation contains 6 chapters.
+    // As soon as the story narration presentation completes (6/6 slides reached or ~46s elapsed),
+    // it automatically transitions the user directly to Stage 2 (3D Inspection Deck).
+    this.storyNarrationDuration = 46000; // 46 seconds for the complete 6/6 chapters presentation
+    this.storyNarrationTimer = null;
     this.isGuideActive = true;
 
     // Stage 2: 3D Inspection Deck elements
@@ -127,7 +123,7 @@ class LandingPageController {
       if (this.guideStage) {
         this.guideStage.classList.add('active');
         this.guideStage.style.display = 'flex';
-        this.startGuideTimer();
+        this.startStoryNarrationFlow();
       } else {
         this.open();
       }
@@ -140,64 +136,72 @@ class LandingPageController {
 
   /* ---------------- STAGE 1: NETLIFY STORY GUIDE METHODS ---------------- */
 
-  startGuideTimer() {
-    this.stopGuideTimer();
-    this.timerRemaining = this.timerDuration;
-    this.isTimerPaused = false;
-    this.updateTimerUI();
+  startStoryNarrationFlow() {
+    this.stopStoryNarrationFlow();
 
-    this.timerInterval = setInterval(() => {
-      if (this.isTimerPaused) return;
+    // Trigger video/narration playback inside the Netlify app
+    this.triggerIframeNarration();
 
-      this.timerRemaining -= 0.1;
-      if (this.timerRemaining <= 0) {
-        this.timerRemaining = 0;
-        this.updateTimerUI();
-        this.stopGuideTimer();
+    // When the full 6/6 slides narration presentation concludes,
+    // automatically transition the user directly to the 3D Inspection Deck.
+    this.storyNarrationTimer = setTimeout(() => {
+      if (this.isGuideActive) {
+        console.log('[QUANTA_CAT] Story narration 6/6 finished. Auto-advancing to Stage 2: 3D Inspection Deck...');
         this.advanceToDeck();
-      } else {
-        this.updateTimerUI();
       }
-    }, 100);
+    }, this.storyNarrationDuration);
   }
 
-  stopGuideTimer() {
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-      this.timerInterval = null;
+  stopStoryNarrationFlow() {
+    if (this.storyNarrationTimer) {
+      clearTimeout(this.storyNarrationTimer);
+      this.storyNarrationTimer = null;
     }
   }
 
-  toggleGuideTimer() {
-    this.isTimerPaused = !this.isTimerPaused;
-    if (this.guideTimerIcon) {
-      this.guideTimerIcon.textContent = this.isTimerPaused ? '▶️' : '⏸️';
-    }
-    const label = document.getElementById('guide-timer-label');
-    if (label && this.isTimerPaused) {
-      label.innerHTML = `<span>Timer paused</span>`;
-    } else {
-      this.updateTimerUI();
-    }
-    this.playBlipSound(480);
-  }
+  triggerIframeNarration() {
+    const sendPlay = () => {
+      try {
+        if (this.guideIframe && this.guideIframe.contentWindow) {
+          const msg = {
+            action: 'play',
+            type: 'play',
+            command: 'play',
+            narration: true,
+            start: true,
+            autoplay: true
+          };
+          this.guideIframe.contentWindow.postMessage(msg, '*');
+        }
+      } catch (err) {}
+    };
 
-  updateTimerUI() {
-    if (this.guideCountdownSecs) {
-      this.guideCountdownSecs.textContent = Math.ceil(this.timerRemaining);
+    // Attempt immediately
+    sendPlay();
+
+    // Attempt upon iframe load
+    if (this.guideIframe) {
+      this.guideIframe.addEventListener('load', () => {
+        setTimeout(sendPlay, 200);
+        setTimeout(sendPlay, 800);
+      }, { once: true });
     }
-    if (this.guideProgressBar) {
-      const pct = Math.min(100, Math.max(0, ((this.timerDuration - this.timerRemaining) / this.timerDuration) * 100));
-      this.guideProgressBar.style.width = `${pct}%`;
-    }
-    const label = document.getElementById('guide-timer-label');
-    if (label && !this.isTimerPaused) {
-      label.innerHTML = `Auto-advancing to 3D Deck in <strong>${Math.ceil(this.timerRemaining)}</strong>s`;
-    }
+
+    // Modern browsers require a user gesture for audio context unblock.
+    // On the first user tap/click anywhere, re-issue playback command to guarantee voice narration starts.
+    const userGestureHandler = () => {
+      sendPlay();
+      window.removeEventListener('pointerdown', userGestureHandler);
+      window.removeEventListener('click', userGestureHandler);
+      window.removeEventListener('keydown', userGestureHandler);
+    };
+    window.addEventListener('pointerdown', userGestureHandler, { passive: true });
+    window.addEventListener('click', userGestureHandler, { passive: true });
+    window.addEventListener('keydown', userGestureHandler, { passive: true });
   }
 
   advanceToDeck() {
-    this.stopGuideTimer();
+    this.stopStoryNarrationFlow();
     this.playQuantaChime();
 
     if (this.guideStage) {
@@ -213,23 +217,8 @@ class LandingPageController {
     }
   }
 
-  advanceToMap() {
-    this.stopGuideTimer();
-    this.playEnterSound();
-
-    if (this.guideStage) {
-      this.guideStage.classList.add('dismissing');
-      setTimeout(() => {
-        this.guideStage.classList.remove('active', 'dismissing');
-        this.guideStage.style.display = 'none';
-        this.isGuideActive = false;
-      }, 500);
-    }
-    this.close(true);
-  }
-
   closeStoryGuide(immediate = false) {
-    this.stopGuideTimer();
+    this.stopStoryNarrationFlow();
     if (!this.guideStage) return;
     this.isGuideActive = false;
     this.guideStage.classList.remove('active', 'dismissing');
@@ -239,13 +228,7 @@ class LandingPageController {
   openStoryGuide() {
     if (!this.guideStage) return;
 
-    // Pause timer so user can browse stories without rush
-    this.stopGuideTimer();
-    this.isTimerPaused = true;
-    if (this.guideTimerIcon) this.guideTimerIcon.textContent = '▶️';
-    const label = document.getElementById('guide-timer-label');
-    if (label) label.innerHTML = `<span>Interactive Mode Active</span>`;
-    if (this.guideProgressBar) this.guideProgressBar.style.width = '100%';
+    this.stopStoryNarrationFlow();
 
     // Hide stage 2 if open
     if (this.screen) {
@@ -261,6 +244,7 @@ class LandingPageController {
     this.isGuideActive = true;
     document.body.style.overflow = 'hidden';
 
+    this.startStoryNarrationFlow();
     this.playBlipSound(600);
 
     if (window.history.replaceState) {
@@ -275,12 +259,6 @@ class LandingPageController {
     if (this.btnProceedDeck) {
       this.btnProceedDeck.addEventListener('click', () => this.advanceToDeck());
     }
-    if (this.btnSkipMapDirect) {
-      this.btnSkipMapDirect.addEventListener('click', () => this.advanceToMap());
-    }
-    if (this.btnGuideToggleTimer) {
-      this.btnGuideToggleTimer.addEventListener('click', () => this.toggleGuideTimer());
-    }
     if (this.btnTopStoryGuide) {
       this.btnTopStoryGuide.addEventListener('click', () => this.openStoryGuide());
     }
@@ -289,17 +267,37 @@ class LandingPageController {
     }
 
     // Cross-origin safe message listener from Netlify storytelling iframe
+    // When 6/6 slides narration presentation ends, advance directly to 3D Inspection Deck
     window.addEventListener('message', (event) => {
       try {
         if (!event.data) return;
         const d = event.data;
-        if (d.action === 'finish' || d.action === 'complete' || d.action === 'explore' || d.type === 'story_complete') {
+        if (
+          d === 'finish' ||
+          d === 'complete' ||
+          d === 'story_complete' ||
+          d.action === 'finish' ||
+          d.action === 'complete' ||
+          d.action === 'end' ||
+          d.action === 'explore' ||
+          d.action === 'story_complete' ||
+          d.type === 'finish' ||
+          d.type === 'complete' ||
+          d.type === 'story_complete' ||
+          d.slide === 6 ||
+          d.chapter === 6 ||
+          d.currentSlide === 6 ||
+          d.currentChapter === 6 ||
+          d.currentIndex === 5 ||
+          d.finished === true
+        ) {
+          console.log('[QUANTA_CAT] Received story finish event from Netlify iframe. Advancing to 3D deck...');
           this.advanceToDeck();
         }
       } catch (e) {}
     });
 
-    // 1. Enter Space Map Action (Big Red Button)
+    // 1. Enter Space Map Action (Big Red Button - Manual user interaction)
     if (this.enterBtn) {
       this.enterBtn.addEventListener('click', () => {
         this.playEnterSound();

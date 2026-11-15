@@ -71,11 +71,17 @@ server.listen(8099, async () => {
     const modalSlice = resHtml.data.substring(resHtml.data.indexOf('id="quanta-team-modal"'), resHtml.data.indexOf('</section>'));
     const modalHasNoPhotos = !modalSlice.includes('<img');
 
+    // Stage 1 Auto-Play & Timer Bar Removal checks
+    const hasNoTimerBar = !resHtml.data.includes('guide-auto-advance-wrap');
+    const hasAutoplayParams = resHtml.data.includes('autoplay=1') && resHtml.data.includes('narration=1');
+
     console.log('Verification Results:');
     console.log('- Stage 1: Netlify Guide Stage Present:', hasNetlifyStage);
     console.log('- Stage 1: Netlify URL Embedded:', hasNetlifyUrl);
     console.log('- Stage 1: Proceed to Deck Button:', hasProceedBtn);
     console.log('- Stage 1: Re-open Story Guide in HUD:', hasStoryGuideBtn);
+    console.log('- Stage 1: Timer bar completely removed:', hasNoTimerBar);
+    console.log('- Stage 1: Autoplay & Narration parameters active:', hasAutoplayParams);
     console.log('- Stage 2: QUANTA_CAT presents ...... Banner:', hasQuanta);
     console.log('- 3D Model Old Selector Bar Removed:', hasNoOldSelectorBar);
     console.log('- 3D Model 4s Auto-Slide Indicator Added:', hasSlideIndicator);
@@ -93,16 +99,20 @@ server.listen(8099, async () => {
     const hasNetlifyCss = resCss.data.includes('.netlify-guide-stage');
     const hasCapsuleCss = resCss.data.includes('.landing-team-capsule');
     const hasSlideCss = resCss.data.includes('slideInModel') && resCss.data.includes('.landing-slide-indicator');
+    const hasNoTimerBarCss = !resCss.data.includes('.guide-auto-advance-wrap');
     console.log('- CSS contains .netlify-guide-stage:', hasNetlifyCss);
     console.log('- CSS contains .landing-team-capsule:', hasCapsuleCss);
     console.log('- CSS contains 3D model slide animations:', hasSlideCss);
+    console.log('- CSS has removed timer bar rules:', hasNoTimerBarCss);
 
     // Check JS controller
     const resJs = await httpGet('http://localhost:8099/js/landing_page.js');
     const hasAdvanceMethods = resJs.data.includes('advanceToDeck') && resJs.data.includes('openStoryGuide');
     const hasAutoSlideJs = resJs.data.includes('startModelAutoSlide') && resJs.data.includes('transitionToModel');
+    const hasNarrationJs = resJs.data.includes('startStoryNarrationFlow') && resJs.data.includes('triggerIframeNarration');
     console.log('- JS contains 3-stage transitions:', hasAdvanceMethods);
     console.log('- JS contains 4s 3D Model Auto-Slide:', hasAutoSlideJs);
+    console.log('- JS contains narration autoplay & story end detection:', hasNarrationJs);
 
     server.close();
     process.exit(0);

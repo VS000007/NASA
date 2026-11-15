@@ -23,49 +23,33 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 
   <!-- Main Styling -->
-  <link rel="stylesheet" href="/css/style.css?v=quanta2026_6">
+  <link rel="stylesheet" href="/css/style.css?v=quanta2026_7">
 </head>
 <body>
 
   <!-- ================= STAGE 1: NETLIFY MISSION STORYTELLING GUIDE ================= -->
   <section id="netlify-guide-stage" class="netlify-guide-stage active" aria-label="QUANTA_CAT Mission Storytelling Guide">
-    <!-- Top Floating HUD Bar for Storytelling Guide -->
+    <!-- Top Floating HUD Bar for Storytelling Guide (Clean header, no progress/timer bar) -->
     <header class="guide-hud-bar">
       <div class="guide-brand-tag">
-        <span class="guide-cat-badge">🐱⚡ QUANTA_CAT</span>
-        <span class="guide-stage-tag">Stage 1 of 3: Mission Story Guide</span>
-      </div>
-
-      <div class="guide-auto-advance-wrap" id="guide-auto-advance-wrap" title="Auto-advances to 3D Inspection Deck. Click pause/play anytime.">
-        <div class="guide-timer-indicator">
-          <span class="guide-pulse-orb"></span>
-          <span id="guide-timer-label">Auto-advancing to 3D Deck in <strong id="guide-countdown-seconds">12</strong>s</span>
-        </div>
-        <div class="guide-progress-track">
-          <div id="guide-progress-bar" class="guide-progress-bar"></div>
-        </div>
-        <button id="btn-guide-toggle-timer" class="guide-timer-control" title="Pause / Resume auto-advance countdown">
-          <span id="guide-timer-icon">⏸️</span>
-        </button>
+        <span class="guide-cat-badge">🐱⚡ QUANTA_CAT presents ......</span>
+        <span class="guide-stage-tag">Space Archaeologists Mission Story</span>
       </div>
 
       <div class="guide-hud-actions">
-        <button id="btn-proceed-to-deck" class="btn-guide-proceed" title="Advance to Stage 2: 3D Inspection Deck">
-          <span>Enter 3D Inspection Deck &rarr;</span>
-        </button>
-        <button id="btn-skip-to-map-direct" class="btn-guide-skip" title="Directly launch Stage 3: Interactive Space Map">
-          <span>Space Map ⚡</span>
+        <button id="btn-proceed-to-deck" class="btn-guide-proceed" title="Skip to Stage 2: 3D Inspection Deck">
+          <span>Skip to 3D Deck &rarr;</span>
         </button>
       </div>
     </header>
 
-    <!-- Embedded Netlify Storytelling Application -->
+    <!-- Embedded Netlify Storytelling Application with Autoplay & Audio Narration -->
     <div class="guide-iframe-container">
       <iframe
         id="netlify-story-iframe"
-        src="https://storytelling-app-a344bb.netlify.app/"
+        src="https://storytelling-app-a344bb.netlify.app/?autoplay=1&play=1&narration=1&start=true&audio=1"
         title="QUANTA_CAT Space Archaeologists Storytelling Guide"
-        allow="autoplay; encrypted-media; fullscreen"
+        allow="autoplay *; microphone *; camera *; encrypted-media *; fullscreen *"
         loading="eager"
       ></iframe>
     </div>
@@ -689,7 +673,7 @@
   <script src="/js/interactive_lab.js"></script>
   <script src="/js/guided_tour.js"></script>
   <script src="/js/forgotten_explorers.js"></script>
-  <script src="/js/landing_page.js?v=quanta2026_6"></script>
+  <script src="/js/landing_page.js?v=quanta2026_7"></script>
 
 </body>
 </html>
