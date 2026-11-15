@@ -160,37 +160,66 @@ class LandingPageController {
   }
 
   triggerIframeNarration() {
-    const sendPlay = () => {
+    const tryDirectTrigger = () => {
       try {
-        if (this.guideIframe && this.guideIframe.contentWindow) {
-          const msg = {
-            action: 'play',
-            type: 'play',
-            command: 'play',
-            narration: true,
-            start: true,
-            autoplay: true
-          };
-          this.guideIframe.contentWindow.postMessage(msg, '*');
+        if (this.guideIframe) {
+          // If same-origin (/story/index.html), directly click the button inside the iframe DOM
+          try {
+            const doc = this.guideIframe.contentDocument || this.guideIframe.contentWindow?.document;
+            if (doc) {
+              const listenBtn = doc.querySelector('.listen-button');
+              if (listenBtn && !listenBtn.classList.contains('auto-started')) {
+                listenBtn.classList.add('auto-started');
+                listenBtn.click();
+                console.log('[QUANTA_CAT] Triggered .listen-button directly in story iframe');
+              }
+              const narrationBtn = doc.querySelector('button[aria-label="Enable narration"]');
+              if (narrationBtn && narrationBtn.getAttribute('aria-pressed') === 'false') {
+                narrationBtn.click();
+              }
+            }
+          } catch (domErr) {}
+
+          // Also send cross-origin / postMessage notification
+          if (this.guideIframe.contentWindow) {
+            const msg = {
+              action: 'play',
+              type: 'play',
+              command: 'play',
+              narration: true,
+              start: true,
+              autoplay: true
+            };
+            this.guideIframe.contentWindow.postMessage(msg, '*');
+          }
         }
       } catch (err) {}
     };
 
-    // Attempt immediately
-    sendPlay();
+    // Attempt immediately and across intervals as React mounts
+    tryDirectTrigger();
+    [80, 200, 450, 900, 1600, 2500].forEach(ms => setTimeout(tryDirectTrigger, ms));
 
     // Attempt upon iframe load
     if (this.guideIframe) {
       this.guideIframe.addEventListener('load', () => {
-        setTimeout(sendPlay, 200);
-        setTimeout(sendPlay, 800);
-      }, { once: true });
+        tryDirectTrigger();
+        setTimeout(tryDirectTrigger, 200);
+        setTimeout(tryDirectTrigger, 800);
+      });
+      // Fallback to Netlify if /story/ fails
+      this.guideIframe.addEventListener('error', () => {
+        if (this.guideIframe.src.includes('/story/')) {
+          console.warn('[QUANTA_CAT] Story local endpoint error, switching to Netlify fallback...');
+          this.guideIframe.src = 'https://storytelling-app-a344bb.netlify.app/?autoplay=1&play=1&narration=1&start=true&audio=1';
+        }
+      });
     }
 
     // Modern browsers require a user gesture for audio context unblock.
     // On the first user tap/click anywhere, re-issue playback command to guarantee voice narration starts.
     const userGestureHandler = () => {
-      sendPlay();
+      tryDirectTrigger();
       window.removeEventListener('pointerdown', userGestureHandler);
       window.removeEventListener('click', userGestureHandler);
       window.removeEventListener('keydown', userGestureHandler);
