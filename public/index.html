@@ -27,6 +27,129 @@
 </head>
 <body>
 
+  <!-- ================= VIEW 0: 3D INSPECTION DECK LANDING PAGE ================= -->
+  <section id="landing-screen" class="landing-screen active" aria-label="Space Archaeologists Inspection Deck Landing Page">
+    <!-- Starfield & Cosmic Grid Backdrop -->
+    <div class="landing-cosmic-bg">
+      <div class="landing-grid-overlay"></div>
+      <div class="landing-nebula-glow"></div>
+      <div class="landing-stars"></div>
+    </div>
+
+    <!-- Top Floating Meta Header -->
+    <header class="landing-top-bar">
+      <div class="landing-brand-tag">
+        <span class="nasa-meatball-mini">NASA</span>
+        <span class="challenge-title">2026 Space Apps Challenge</span>
+      </div>
+      <div class="landing-top-actions">
+        <a href="#map" id="landing-skip-link" class="landing-ghost-btn" title="Skip directly to the Interactive Solar System Map">
+          Skip to Space Map &rarr;
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Hero Container -->
+    <div class="landing-content-container">
+      
+      <!-- 3D Model Stage Area -->
+      <div class="landing-model-stage">
+        <!-- Status Pill Badge -->
+        <div class="landing-status-badge">
+          <span class="landing-pulse-dot"></span>
+          <span>INSPECTION DECK &bull; ORBIT CONTROLS ACTIVE</span>
+        </div>
+
+        <!-- Interactive 3D Model Viewer -->
+        <div class="landing-model-viewport">
+          <model-viewer
+            id="landing-model-viewer"
+            src="/models/apollo_lunar_module.glb"
+            alt="Apollo 11 Lunar Module Descent Stage"
+            camera-controls
+            touch-action="pan-y"
+            auto-rotate
+            auto-rotate-delay="400"
+            rotation-per-second="14deg"
+            shadow-intensity="1.8"
+            shadow-softness="0.5"
+            exposure="1.2"
+            environment-image="neutral"
+            bounds="tight"
+            interaction-prompt="none"
+            ar>
+          </model-viewer>
+
+          <!-- Floating Orbit Hint -->
+          <div class="landing-drag-hint">
+            <span>&olarr; Drag to spin the lander 360&deg; &bull; Scroll to zoom</span>
+          </div>
+        </div>
+
+        <!-- 3D Relic Selector Pills -->
+        <div class="landing-model-selector" role="group" aria-label="Select 3D Relic to Inspect">
+          <button class="model-select-pill active" data-model="/models/apollo_lunar_module.glb" data-name="Apollo 11 Lunar Module (Moon &bull; 1969)">
+            <span>🌕</span> Apollo 11 Lander
+          </button>
+          <button class="model-select-pill" data-model="/models/perseverance_rover.glb" data-name="Perseverance Rover (Mars &bull; 2021)">
+            <span>🔴</span> Perseverance Rover
+          </button>
+          <button class="model-select-pill" data-model="/models/ingenuity_helicopter.glb" data-name="Ingenuity Helicopter (Mars &bull; 2021)">
+            <span>🚁</span> Ingenuity Helicopter
+          </button>
+          <button class="model-select-pill" data-model="/models/viking_lander.glb" data-name="Viking 1 Lander (Mars &bull; 1976)">
+            <span>🛰️</span> Viking 1 Lander
+          </button>
+          <button class="model-select-pill" data-model="/models/opportunity_rover.glb" data-name="Opportunity Rover (Mars &bull; 2004)">
+            <span>☀️</span> Opportunity Rover
+          </button>
+        </div>
+        <div id="landing-active-model-name" class="landing-active-model-caption">
+          Featured: Apollo 11 Lunar Module Descent Stage (Mare Tranquillitatis, 1969)
+        </div>
+      </div>
+
+      <!-- Hero Copy & The Big Red Action Button -->
+      <div class="landing-cta-section">
+        <h1 class="landing-title">Every machine has a story. Ready to find them?</h1>
+        <p class="landing-description">
+          Built for the 2026 NASA Space Apps Challenge. Drag to spin the lander or enter the Space Map.
+        </p>
+
+        <!-- The Big Red 3D Button -->
+        <button id="btn-enter-space-map" class="btn-enter-space-map" aria-label="Enter the Space Map">
+          <span class="btn-red-icon">🧭</span>
+          <span class="btn-red-text">ENTER THE SPACE MAP</span>
+          <div class="btn-red-shine"></div>
+        </button>
+
+        <p class="landing-subtext">Built for the 2026 NASA Space Apps Challenge.</p>
+
+        <!-- Key Platform Metrics Bar -->
+        <div class="landing-stats-row">
+          <div class="stat-badge">
+            <span class="stat-num">66</span>
+            <span class="stat-lbl">Relics Cataloged</span>
+          </div>
+          <div class="stat-badge">
+            <span class="stat-num">47</span>
+            <span class="stat-lbl">Moon Artifacts</span>
+          </div>
+          <div class="stat-badge">
+            <span class="stat-num">19</span>
+            <span class="stat-lbl">Mars Explorers</span>
+          </div>
+          <div class="stat-badge">
+            <span class="stat-num">100%</span>
+            <span class="stat-lbl">NASA JPL Telemetry</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
   <!-- ================= VIEW 1: SOLAR SYSTEM NAVIGATOR ================= -->
   <canvas id="space-canvas"></canvas>
   <div class="ambient-glow"></div>
@@ -45,6 +168,9 @@
     </div>
 
     <div class="hud-actions">
+      <button id="btn-open-landing" class="btn-glass btn-deck-glow" onclick="window.openLandingPage()" title="Return to 3D Inspection Deck & Landing Page">
+        <span>🛰️</span> Inspection Deck
+      </button>
       <button id="btn-explore-moon" class="btn-glass btn-moon" title="Jump to the Moon">
         <span>🌕</span> Moon <span id="header-moon-count" style="opacity:0.85; font-size:0.8em;">(47 Relics)</span>
       </button>
@@ -404,6 +530,7 @@
   <script src="/js/interactive_lab.js"></script>
   <script src="/js/guided_tour.js"></script>
   <script src="/js/forgotten_explorers.js"></script>
+  <script src="/js/landing_page.js"></script>
 
 </body>
 </html>
