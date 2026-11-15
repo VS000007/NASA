@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="bgV" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="glowV" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="visorV" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff"/>
+      <stop offset="50%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Circle -->
+  <rect width="120" height="120" rx="60" fill="url(#bgV)"/>
+  <circle cx="60" cy="60" r="56" fill="none" stroke="url(#glowV)" stroke-width="2.5" stroke-dasharray="10 4"/>
+  
+  <!-- Astronaut Helmet / Visor Shape -->
+  <circle cx="60" cy="50" r="25" fill="#0b1329" stroke="#00e5ff" stroke-width="2.2"/>
+  <path d="M41 52 C41 38 79 38 79 52 C79 61 41 61 41 52 Z" fill="url(#visorV)" opacity="0.9"/>
+  <!-- Specular Visor Highlight -->
+  <ellipse cx="49" cy="46" rx="5" ry="2.5" fill="#ffffff" opacity="0.85" transform="rotate(-15 49 46)"/>
+  
+  <!-- Quantum Cat Ears on Helmet (Signature QUANTA_CAT crest) -->
+  <polygon points="42,34 48,22 53,30" fill="#00e5ff" opacity="0.95"/>
+  <polygon points="78,34 72,22 67,30" fill="#00e5ff" opacity="0.95"/>
+  
+  <!-- Spacesuit Collar & Shoulders -->
+  <path d="M26 102 C26 80 42 74 60 74 C78 74 94 80 94 102 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="2.2"/>
+  <!-- Mission Insignia Badge -->
+  <circle cx="60" cy="85" r="5" fill="#fbbf24"/>
+  <polygon points="60,82 62,86 58,86" fill="#030712"/>
+</svg>

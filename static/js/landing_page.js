@@ -164,16 +164,40 @@ class LandingPageController {
       });
     }
 
-    // 6. QUANTA_CAT Corner Badge Click
+    // 6. QUANTA_CAT Corner Badge & Team Openers Click
+    const openTeamDossier = () => {
+      this.playQuantaChime();
+      this.openTeamModal();
+    };
+
     if (this.quantaBanner) {
-      this.quantaBanner.addEventListener('click', () => {
-        this.playQuantaChime();
-        const crewSec = document.getElementById('landing-team-section');
-        if (crewSec) {
-          crewSec.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
+      this.quantaBanner.addEventListener('click', openTeamDossier);
     }
+
+    const headerTeamPill = document.getElementById('header-team-pill');
+    if (headerTeamPill) {
+      headerTeamPill.addEventListener('click', openTeamDossier);
+    }
+
+    const btnTopTeamModal = document.getElementById('btn-top-team-modal');
+    if (btnTopTeamModal) {
+      btnTopTeamModal.addEventListener('click', openTeamDossier);
+    }
+
+    const heroTeamStrip = document.getElementById('landing-team-hero-card');
+    if (heroTeamStrip) {
+      heroTeamStrip.addEventListener('click', openTeamDossier);
+    }
+
+    // Escape closes team modal if active
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('quanta-team-modal');
+        if (modal && modal.classList.contains('active')) {
+          this.closeTeamModal();
+        }
+      }
+    });
 
     // 7. In-Page Smooth Scroll Navigation
     const btnManifesto = document.getElementById('btn-scroll-manifesto');
@@ -243,6 +267,22 @@ class LandingPageController {
     window.openLandingPage = () => this.open();
     window.closeLandingPage = () => this.close();
     window.landingPage = this;
+  }
+
+  openTeamModal() {
+    const modal = document.getElementById('quanta-team-modal');
+    if (modal) {
+      modal.classList.add('active');
+      this.playBlipSound(680);
+    }
+  }
+
+  closeTeamModal() {
+    const modal = document.getElementById('quanta-team-modal');
+    if (modal) {
+      modal.classList.remove('active');
+      this.playBlipSound(440);
+    }
   }
 
   open() {

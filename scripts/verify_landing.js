@@ -41,20 +41,22 @@ server.listen(8099, async () => {
   try {
     // Check root index.html
     const resHtml = await httpGet('http://localhost:8099/');
-    const hasQuanta = resHtml.data.includes('QUANTA_CAT');
-    const hasManifesto = resHtml.data.includes('landing-manifesto');
-    const hasCrew = resHtml.data.includes('landing-team-section');
-    const hasElena = resHtml.data.includes('avatar_elena.svg');
+    const hasQuanta = resHtml.data.includes('QUANTA_CAT presents ......');
+    const hasVarnit = resHtml.data.includes('Varnit Sharma');
+    const hasHeroStrip = resHtml.data.includes('landing-team-hero-card');
+    const hasModal = resHtml.data.includes('quanta-team-modal');
+    const hasAvatar = resHtml.data.includes('avatar_varnit.svg');
 
     console.log('Verification Results:');
-    console.log('- Contains QUANTA_CAT Banner:', hasQuanta);
-    console.log('- Contains Manifesto Section:', hasManifesto);
-    console.log('- Contains Crew Showcase Section:', hasCrew);
-    console.log('- Contains Elena Avatar:', hasElena);
+    console.log('- Contains QUANTA_CAT presents ...... Banner:', hasQuanta);
+    console.log('- Contains Lead Varnit Sharma:', hasVarnit);
+    console.log('- Contains Hero Team Strip:', hasHeroStrip);
+    console.log('- Contains Team Dossier Modal:', hasModal);
+    console.log('- Contains Varnit Avatar:', hasAvatar);
 
     // Check SVG Avatar
-    const resAvatar = await httpGet('http://localhost:8099/images/team/avatar_elena.svg');
-    console.log('- Avatar Elena status:', resAvatar.status);
+    const resAvatar = await httpGet('http://localhost:8099/images/team/avatar_varnit.svg');
+    console.log('- Avatar Varnit status:', resAvatar.status);
 
     // Check JS controller
     const resJs = await httpGet('http://localhost:8099/js/landing_page.js');

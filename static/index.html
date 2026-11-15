@@ -37,7 +37,7 @@
     </div>
 
     <!-- QUANTA_CAT Animated Corner Presentation Badge -->
-    <div id="landing-quanta-banner" class="landing-quanta-banner" title="Presented by Team QUANTA_CAT • 2026 NASA Space Apps Challenge">
+    <div id="landing-quanta-banner" class="landing-quanta-banner" title="Click to view Team QUANTA_CAT Dossier">
       <span class="quanta-cat-glyph">🐱⚡</span>
       <div class="quanta-text-stack">
         <span class="quanta-brand">QUANTA_CAT</span>
@@ -51,13 +51,21 @@
       <div class="landing-brand-tag">
         <span class="nasa-meatball-mini">NASA</span>
         <span class="challenge-title">2026 Space Apps Challenge</span>
+        <span class="brand-divider">•</span>
+        <span class="brand-team-pill" id="header-team-pill" title="Click to view Team QUANTA_CAT details">
+          <span class="team-dot-indicator"></span>
+          Team QUANTA_CAT
+        </span>
       </div>
       <div class="landing-top-actions">
+        <button id="btn-top-team-modal" class="landing-nav-link" title="Open Team QUANTA_CAT Dossier">
+          <span>👥</span> Team Crew
+        </button>
         <a href="#landing-manifesto" class="landing-nav-link" id="btn-scroll-manifesto">
           <span>📜</span> Manifesto
         </a>
         <a href="#landing-team-section" class="landing-nav-link" id="btn-scroll-crew">
-          <span>👥</span> Mission Crew
+          <span>🏛️</span> Heritage
         </a>
         <a href="#map" id="landing-skip-link" class="landing-ghost-btn" title="Skip directly to the Interactive Solar System Map">
           Enter Space Map &rarr;
@@ -203,6 +211,27 @@
             <span class="stat-lbl">NASA JPL Telemetry</span>
           </div>
         </div>
+
+        <!-- Prominent Team QUANTA_CAT Hero Bar -->
+        <div class="landing-team-hero-card" id="landing-team-hero-card">
+          <div class="team-hero-inner" onclick="window.landingPage?.openTeamModal()">
+            <div class="team-hero-lead-avatar">
+              <img src="/images/team/avatar_varnit.svg" alt="Varnit Sharma" />
+              <span class="lead-online-badge"></span>
+            </div>
+            <div class="team-hero-info">
+              <div class="team-hero-title-line">
+                <span class="team-pill-tag">🐱⚡ TEAM QUANTA_CAT</span>
+                <span class="team-event-tag">2026 NASA Space Apps Challenge</span>
+              </div>
+              <div class="team-hero-sub">
+                <span class="team-member-name">Varnit Sharma</span>
+                <span class="team-member-role">&bull; Lead AI & Systems Architect</span>
+                <span class="team-view-link">Explore Team &rarr;</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -243,33 +272,42 @@
     <section id="landing-team-section" class="landing-team-section" aria-label="QUANTA_CAT Team Members">
       <div class="team-inner-container">
         <div class="section-tag-row">
-          <span class="manifesto-tag">🐱⚡ Mission Specialists</span>
+          <span class="manifesto-tag">🐱⚡ Team QUANTA_CAT</span>
         </div>
-        <h2 class="team-section-title">The QUANTA_CAT Crew</h2>
+        <h2 class="team-section-title">The QUANTA_CAT Mission Crew</h2>
         <p class="team-section-subtitle">
-          The multidisciplinary engineering, planetary science, and narrative team behind Space Archaeologists.
+          Built for the 2026 NASA Space Apps Challenge &bull; Pioneering autonomous space telemetry and planetary archaeology.
         </p>
 
         <div class="team-crew-grid">
-          <!-- Member 1: Dr. Elena Vance -->
+          <!-- Member 1: Varnit Sharma -->
           <div class="crew-card card-cyan">
             <div class="crew-avatar-wrapper">
-              <img src="/images/team/avatar_elena.svg" alt="Dr. Elena Vance" class="crew-avatar" />
-              <span class="crew-callsign">LEAD</span>
+              <img src="/images/team/avatar_varnit.svg" alt="Varnit Sharma" class="crew-avatar" />
+              <span class="crew-callsign">TEAM LEAD</span>
             </div>
             <div class="crew-info">
-              <h3 class="crew-name">Dr. Elena Vance</h3>
-              <p class="crew-role">Lead Systems Architect & Ephemeris Engineer</p>
+              <h3 class="crew-name">Varnit Sharma</h3>
+              <p class="crew-role">Lead AI & Planetary Systems Architect</p>
               <div class="crew-tags">
-                <span>NASA JPL Horizons</span>
-                <span>FastAPI Telemetry</span>
-                <span>Orbital Dynamics</span>
+                <span>MIET Meerut</span>
+                <span>NASA Space Apps 2026</span>
+                <span>exovista.org</span>
+                <span>SGAC Member</span>
               </div>
               <p class="crew-bio">
-                Engineered the sub-arcsecond coordinate pipelines converting NASA Horizons ephemeris data into smooth solar orbital motions and verified telemetry integrity across all 66 planetary artifacts.
+                Lead developer and systems architect of Space Archaeologists. Designed the orbital mechanics, JPL Horizons ephemeris integration, and 3D lunar/Martian interactive telemetry.
               </p>
+              <div class="crew-social-row">
+                <a href="https://github.com/VS000007" target="_blank" rel="noopener" class="crew-link-btn" title="Varnit Sharma on GitHub">
+                  <span>💻</span> GitHub: @VS000007
+                </a>
+                <a href="https://www.linkedin.com/in/varnit-sharma-671873376" target="_blank" rel="noopener" class="crew-link-btn" title="Varnit Sharma on LinkedIn">
+                  <span>🔗</span> LinkedIn
+                </a>
+              </div>
               <blockquote class="crew-quote">
-                &ldquo;Telemetry is memory; preserving coordinates preserves the human courage that placed them there.&rdquo;
+                &ldquo;Building bridges between deep space archives and young inquisitive minds to preserve human heritage across the cosmos.&rdquo;
               </blockquote>
             </div>
           </div>
@@ -277,19 +315,19 @@
           <!-- Member 2: Kaelen Voss -->
           <div class="crew-card card-purple">
             <div class="crew-avatar-wrapper">
-              <img src="/images/team/avatar_kaelen.svg" alt="Kaelen Voss" class="crew-avatar" />
-              <span class="crew-callsign">3D / UX</span>
+              <img src="/images/team/avatar_kaelen.svg" alt="QUANTA_CAT 3D Engineer" class="crew-avatar" />
+              <span class="crew-callsign">3D / SHADERS</span>
             </div>
             <div class="crew-info">
-              <h3 class="crew-name">Kaelen Voss</h3>
-              <p class="crew-role">3D WebGL & Real-Time Graphics Specialist</p>
+              <h3 class="crew-name">3D WebGL Specialist</h3>
+              <p class="crew-role">Team QUANTA_CAT Graphics & Audio Engineer</p>
               <div class="crew-tags">
                 <span>WebGL PBR</span>
                 <span>Google Model-Viewer</span>
                 <span>Web Audio API</span>
               </div>
               <p class="crew-bio">
-                Crafted the tactile 3D Inspection Deck, procedural Web Audio telemetry soundscapes, and real-time PBR lighting environments for Apollo, Perseverance, and Viking lander meshes.
+                Engineered the tactile 3D Inspection Deck, procedural Web Audio telemetry soundscapes, and real-time PBR lighting environments for Apollo, Perseverance, and Viking lander meshes.
               </p>
               <blockquote class="crew-quote">
                 &ldquo;Every polygon and shader is tuned to make young minds feel the weight and tactile reality of deep space.&rdquo;
@@ -300,12 +338,12 @@
           <!-- Member 3: Aria Chen -->
           <div class="crew-card card-gold">
             <div class="crew-avatar-wrapper">
-              <img src="/images/team/avatar_aria.svg" alt="Aria Chen" class="crew-avatar" />
+              <img src="/images/team/avatar_aria.svg" alt="QUANTA_CAT Planetary Archivist" class="crew-avatar" />
               <span class="crew-callsign">ARCHAEOLOGY</span>
             </div>
             <div class="crew-info">
-              <h3 class="crew-name">Aria Chen</h3>
-              <p class="crew-role">Planetary Archaeologist & Senior Archivist</p>
+              <h3 class="crew-name">Planetary Archivist</h3>
+              <p class="crew-role">Team QUANTA_CAT Remote Sensing & Heritage</p>
               <div class="crew-tags">
                 <span>NASA Moon & Mars Trek</span>
                 <span>LROC & HiRISE</span>
@@ -323,12 +361,12 @@
           <!-- Member 4: Marcus Reyes -->
           <div class="crew-card card-emerald">
             <div class="crew-avatar-wrapper">
-              <img src="/images/team/avatar_marcus.svg" alt="Marcus Reyes" class="crew-avatar" />
+              <img src="/images/team/avatar_marcus.svg" alt="QUANTA_CAT Science Narrator" class="crew-avatar" />
               <span class="crew-callsign">PEDAGOGY</span>
             </div>
             <div class="crew-info">
-              <h3 class="crew-name">Marcus Reyes</h3>
-              <p class="crew-role">Science Narrative Director & Educational Technologist</p>
+              <h3 class="crew-name">Science Communicator</h3>
+              <p class="crew-role">Team QUANTA_CAT Multi-Audience Narrative Lead</p>
               <div class="crew-tags">
                 <span>Dual-Tier Pedagogy</span>
                 <span>Voice Synthesis</span>
@@ -356,6 +394,65 @@
         </div>
       </div>
     </section>
+
+    <!-- ================= FLOATING TEAM QUANTA_CAT MODAL ================= -->
+    <div id="quanta-team-modal" class="quanta-team-modal" role="dialog" aria-modal="true" aria-labelledby="modal-team-title">
+      <div class="quanta-modal-backdrop" onclick="window.landingPage?.closeTeamModal()"></div>
+      <div class="quanta-modal-window">
+        <button class="quanta-modal-close" onclick="window.landingPage?.closeTeamModal()" aria-label="Close Team Dossier">&times;</button>
+        <div class="quanta-modal-header">
+          <span class="quanta-cat-glyph">🐱⚡</span>
+          <div>
+            <h2 id="modal-team-title" class="quanta-modal-title">Team QUANTA_CAT</h2>
+            <p class="quanta-modal-subtitle">2026 NASA Space Apps Challenge &bull; Space Archaeologists Mission Crew</p>
+          </div>
+        </div>
+        
+        <div class="quanta-modal-body">
+          <!-- Featured Lead Profile: Varnit Sharma -->
+          <div class="modal-lead-profile">
+            <div class="modal-lead-avatar">
+              <img src="/images/team/avatar_varnit.svg" alt="Varnit Sharma" />
+              <span class="modal-lead-badge">TEAM LEAD</span>
+            </div>
+            <div class="modal-lead-details">
+              <h3>Varnit Sharma</h3>
+              <p class="modal-lead-role">Lead AI Architect & Planetary Systems Engineer</p>
+              <p class="modal-lead-school">Meerut Institute of Engineering and Technology (M.I.E.T), Meerut</p>
+              <p class="modal-lead-summary">
+                Undergraduate in Artificial Intelligence with a passion for Astrophysics, Quantum Physics, and Celestial Mechanics. Researcher at exovista.org, member of Space Generation Advisory Council (SGAC), and winner of multiple hackathons. Architected the real-time NASA JPL Horizons orbital pipeline and interactive planetary archaeology ledger.
+              </p>
+              <div class="modal-lead-links">
+                <a href="https://github.com/VS000007" target="_blank" rel="noopener" class="modal-pill-link">
+                  <span>💻</span> GitHub (@VS000007)
+                </a>
+                <a href="https://www.linkedin.com/in/varnit-sharma-671873376" target="_blank" rel="noopener" class="modal-pill-link">
+                  <span>🔗</span> LinkedIn Profile
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Team Pillars -->
+          <div class="modal-team-pillars">
+            <div class="modal-pillar-box">
+              <h4>🚀 Mission Charter</h4>
+              <p>Preserving 66 verified pieces of hardware left behind on the Moon and Mars with real NASA 3D models and high-resolution Trek imagery.</p>
+            </div>
+            <div class="modal-pillar-box">
+              <h4>🧠 Core Technologies</h4>
+              <p>NASA JPL Horizons API, Leaflet.js Trek WMTS, Three.js, WebGL PBR, Web Speech API narration, and FastAPI backend.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="quanta-modal-footer">
+          <button class="btn-enter-space-map" onclick="window.landingPage?.closeTeamModal(); window.landingPage?.close();">
+            <span>🧭</span> Enter Space Map Now
+          </button>
+        </div>
+      </div>
+    </div>
 
   </section>
 
