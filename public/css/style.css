@@ -6224,30 +6224,26 @@ model-viewer {
    QUANTA_CAT CORNER BANNER & ENHANCED LANDING INTERACTIVITY
    ========================================================================== */
 
-/* QUANTA_CAT Animated Corner Presentation Badge */
+/* QUANTA_CAT Presentation Brand in Header */
 .landing-quanta-banner {
-  position: fixed;
-  top: 1.25rem;
-  left: 1.5rem;
-  z-index: 5200;
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;
-  background: rgba(10, 17, 36, 0.92);
-  border: 1.5px solid #00e5ff;
-  box-shadow: 0 0 25px rgba(0, 229, 255, 0.35), inset 0 0 16px rgba(168, 85, 247, 0.25);
-  backdrop-filter: blur(20px);
-  padding: 0.5rem 1.2rem;
+  background: rgba(10, 17, 36, 0.8);
+  border: 1.5px solid rgba(0, 229, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2), inset 0 0 12px rgba(168, 85, 247, 0.15);
+  backdrop-filter: blur(16px);
+  padding: 0.4rem 1rem;
   border-radius: 9999px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: floatSubtle 4s ease-in-out infinite alternate;
 }
 
 .landing-quanta-banner:hover {
-  transform: translateY(-3px) scale(1.04);
+  transform: translateY(-2px) scale(1.02);
   border-color: #38bdf8;
-  box-shadow: 0 0 35px rgba(0, 229, 255, 0.6), inset 0 0 25px rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.5), inset 0 0 18px rgba(168, 85, 247, 0.3);
 }
 
 .quanta-cat-glyph {
@@ -6277,6 +6273,364 @@ model-viewer {
   font-weight: 700;
   color: #e2e8f0;
   letter-spacing: 0.06em;
+}
+
+.quanta-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #00e5ff;
+  box-shadow: 0 0 10px #00e5ff, 0 0 18px #a855f7;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+/* De-congested Representative Team Capsule on Hero Screen */
+.landing-team-capsule {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(56, 189, 248, 0.1);
+  backdrop-filter: blur(14px);
+  padding: 8px 18px;
+  border-radius: 9999px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.25s ease;
+  max-width: 95%;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.landing-team-capsule:hover {
+  background: rgba(15, 23, 42, 0.92);
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 6px 28px rgba(0, 229, 255, 0.25), inset 0 0 20px rgba(56, 189, 248, 0.2);
+  transform: translateY(-2px);
+}
+
+.capsule-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.capsule-quanta-tag {
+  font-family: var(--font-title);
+  font-size: 0.82rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #f59e0b 0%, #ec4899 50%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.04em;
+}
+
+.capsule-country-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.capsule-members-list {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  flex-wrap: wrap;
+}
+
+.capsule-members-list strong {
+  color: #fff;
+}
+
+.dot-sep {
+  opacity: 0.4;
+  font-size: 0.7rem;
+}
+
+.capsule-cta-arrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #38bdf8;
+  white-space: nowrap;
+}
+
+/* Interactive Floating Team QUANTA_CAT Modal */
+.quanta-team-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 6000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 1.5rem;
+}
+
+.quanta-team-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.quanta-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.88);
+  backdrop-filter: blur(14px);
+}
+
+.quanta-modal-window {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 840px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1.5px solid rgba(0, 229, 255, 0.4);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(0, 229, 255, 0.25);
+  border-radius: 24px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: modalScaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quanta-modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  line-height: 1;
+}
+
+.quanta-modal-close:hover {
+  color: #fff;
+}
+
+.quanta-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 1rem;
+}
+
+.quanta-modal-title {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.quanta-modal-subtitle {
+  font-size: 0.82rem;
+  color: var(--accent-cyan);
+}
+
+/* 5-Member Grid inside Modal (Clean, No Photos) */
+.modal-team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.modal-member-card {
+  background: rgba(10, 17, 36, 0.65);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 14px;
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  transition: all 0.2s ease;
+}
+
+.modal-member-card:hover {
+  background: rgba(10, 17, 36, 0.85);
+  border-color: rgba(56, 189, 248, 0.45);
+  transform: translateY(-2px);
+}
+
+.modal-member-card.card-lead {
+  grid-column: 1 / -1;
+  background: rgba(14, 26, 56, 0.75);
+  border-color: rgba(0, 229, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.12);
+}
+
+.member-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.member-monogram {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+  letter-spacing: 0.04em;
+}
+
+.badge-cyan {
+  background: rgba(6, 182, 212, 0.16);
+  border: 2px solid #06b6d4;
+  color: #38bdf8;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.35);
+}
+
+.badge-rose {
+  background: rgba(244, 63, 94, 0.16);
+  border: 2px solid #f43f5e;
+  color: #fda4af;
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.35);
+}
+
+.badge-amber {
+  background: rgba(245, 158, 11, 0.16);
+  border: 2px solid #f59e0b;
+  color: #fcd34d;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+}
+
+.badge-emerald {
+  background: rgba(16, 185, 129, 0.16);
+  border: 2px solid #10b981;
+  color: #6ee7b7;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+}
+
+.badge-violet {
+  background: rgba(139, 92, 246, 0.16);
+  border: 2px solid #8b5cf6;
+  color: #c4b5fd;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.35);
+}
+
+.member-id-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.member-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.member-name {
+  font-family: var(--font-title);
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+
+.member-owner-badge {
+  background: #f59e0b;
+  color: #030712;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.member-country-tag {
+  background: rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.member-handle {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.member-role-title {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.member-bio {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.member-links-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.member-chip-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.member-chip-link:hover {
+  background: var(--accent-cyan);
+  color: #030712;
+}
+
+.member-location-chip {
+  font-size: 0.74rem;
+  color: #94a3b8;
+}
+
+.quanta-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .modal-team-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .quanta-pulse-dot {
@@ -6538,136 +6892,6 @@ model-viewer {
 .quanta-modal-subtitle {
   font-size: 0.82rem;
   color: var(--accent-cyan);
-}
-
-.modal-lead-profile {
-  display: flex;
-  gap: 1.5rem;
-  background: rgba(10, 17, 36, 0.7);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  border-radius: 16px;
-  padding: 1.5rem;
-  align-items: flex-start;
-}
-
-.modal-lead-avatar {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  flex-shrink: 0;
-}
-
-.modal-lead-avatar img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 2px solid #00e5ff;
-  box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-}
-
-.modal-lead-badge {
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #0284c7;
-  color: #fff;
-  font-size: 0.62rem;
-  font-weight: 800;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-}
-
-.modal-lead-details h3 {
-  font-family: var(--font-title);
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 2px;
-}
-
-.modal-lead-role {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--accent-cyan);
-  margin-bottom: 2px;
-}
-
-.modal-lead-school {
-  font-size: 0.78rem;
-  color: #94a3b8;
-  margin-bottom: 0.75rem;
-}
-
-.modal-lead-summary {
-  font-size: 0.85rem;
-  line-height: 1.55;
-  color: #cbd5e1;
-  margin-bottom: 1rem;
-}
-
-.modal-lead-links {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.modal-pill-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(0, 229, 255, 0.15);
-  border: 1px solid rgba(0, 229, 255, 0.4);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 6px 14px;
-  border-radius: 10px;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.modal-pill-link:hover {
-  background: var(--accent-cyan);
-  color: #030712;
-  box-shadow: 0 0 20px var(--accent-cyan);
-  transform: translateY(-2px);
-}
-
-.modal-team-pillars {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.modal-pillar-box {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 1rem;
-}
-
-.modal-pillar-box h4 {
-  font-family: var(--font-title);
-  font-size: 0.95rem;
-  color: #f8fafc;
-  margin-bottom: 0.4rem;
-}
-
-.modal-pillar-box p {
-  font-size: 0.8rem;
-  line-height: 1.5;
-  color: #94a3b8;
-}
-
-.quanta-modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 1rem;
 }
 
 @keyframes floatSubtle {

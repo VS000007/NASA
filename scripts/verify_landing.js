@@ -46,10 +46,26 @@ server.listen(8099, async () => {
     const hasProceedBtn = resHtml.data.includes('id="btn-proceed-to-deck"');
     const hasStoryGuideBtn = resHtml.data.includes('btn-open-story-guide');
     const hasQuanta = resHtml.data.includes('quanta-brand') && resHtml.data.includes('presents ......');
-    const hasVarnit = resHtml.data.includes('Varnit Sharma');
-    const hasHeroStrip = resHtml.data.includes('landing-team-hero-card');
+
+    // 5 Team Members Verification
+    const hasVarnit = resHtml.data.includes('Varnit Sharma') && resHtml.data.includes('@quanta_cat');
+    const hasHarshika = resHtml.data.includes('Harshika Kaushik') && resHtml.data.includes('@harshika_kaushik');
+    const hasAnushri = resHtml.data.includes('Anushri Yadav') && resHtml.data.includes('@anushri_08');
+    const hasPriyanshu = resHtml.data.includes('PRIYANSHU KUMAR') && resHtml.data.includes('@priyanshu_kumar01');
+    const hasShashank = resHtml.data.includes('Shashank Shekhar') && resHtml.data.includes('@shashank_1610');
+
+    // Cleanliness & Layout checks
+    const hasTeamCapsule = resHtml.data.includes('landing-team-capsule');
     const hasModal = resHtml.data.includes('quanta-team-modal');
-    const hasAvatar = resHtml.data.includes('avatar_varnit.svg');
+    const hasMonograms = resHtml.data.includes('badge-cyan">VS') && 
+                         resHtml.data.includes('badge-rose">HK') && 
+                         resHtml.data.includes('badge-amber">AY') && 
+                         resHtml.data.includes('badge-emerald">PK') && 
+                         resHtml.data.includes('badge-violet">SS');
+
+    // Confirm no photos used in team modal
+    const modalSlice = resHtml.data.substring(resHtml.data.indexOf('id="quanta-team-modal"'), resHtml.data.indexOf('</section>'));
+    const modalHasNoPhotos = !modalSlice.includes('<img');
 
     console.log('Verification Results:');
     console.log('- Stage 1: Netlify Guide Stage Present:', hasNetlifyStage);
@@ -57,15 +73,21 @@ server.listen(8099, async () => {
     console.log('- Stage 1: Proceed to Deck Button:', hasProceedBtn);
     console.log('- Stage 1: Re-open Story Guide in HUD:', hasStoryGuideBtn);
     console.log('- Stage 2: QUANTA_CAT presents ...... Banner:', hasQuanta);
-    console.log('- Stage 2: Lead Varnit Sharma Mentioned:', hasVarnit);
-    console.log('- Stage 2: Hero Team Strip:', hasHeroStrip);
-    console.log('- Stage 2: Team Dossier Modal:', hasModal);
-    console.log('- Stage 2: Varnit Avatar SVG:', hasAvatar);
+    console.log('- Team Member 1 (Varnit Sharma @quanta_cat):', hasVarnit);
+    console.log('- Team Member 2 (Harshika Kaushik @harshika_kaushik):', hasHarshika);
+    console.log('- Team Member 3 (Anushri Yadav @anushri_08):', hasAnushri);
+    console.log('- Team Member 4 (PRIYANSHU KUMAR @priyanshu_kumar01):', hasPriyanshu);
+    console.log('- Team Member 5 (Shashank Shekhar @shashank_1610):', hasShashank);
+    console.log('- Team Capsule on Hero:', hasTeamCapsule);
+    console.log('- Team Modal with all monograms:', hasMonograms);
+    console.log('- Team Modal strictly without photos:', modalHasNoPhotos);
 
     // Check CSS
     const resCss = await httpGet('http://localhost:8099/css/style.css');
     const hasNetlifyCss = resCss.data.includes('.netlify-guide-stage');
+    const hasCapsuleCss = resCss.data.includes('.landing-team-capsule');
     console.log('- CSS contains .netlify-guide-stage:', hasNetlifyCss);
+    console.log('- CSS contains .landing-team-capsule:', hasCapsuleCss);
 
     // Check JS controller
     const resJs = await httpGet('http://localhost:8099/js/landing_page.js');
