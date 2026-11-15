@@ -36,14 +36,20 @@
 }
 </style>
 <script>
-// QUANTA_CAT Space Archaeologists: High-Reliability Auto-Start & Completion Bridge
+// QUANTA_CAT Space Archaeologists: High-Reliability 6-Slide Watcher & Bridge
 (function() {
-  function tryStartStory() {
+  let hasStartedStory = false;
+  let reachedChapter6 = false;
+  let chapter6WasPlaying = false;
+  let chapter6Completed = false;
+
+  function tryAutoStart() {
     try {
       const listenBtn = document.querySelector('.listen-button');
-      if (listenBtn && !listenBtn.classList.contains('auto-started')) {
-        listenBtn.classList.add('auto-started');
+      if (listenBtn && !listenBtn.dataset.started) {
+        listenBtn.dataset.started = 'true';
         listenBtn.click();
+        hasStartedStory = true;
         console.log('[QUANTA_CAT] Auto-started storytelling from .listen-button');
       }
       const narrationBtn = document.querySelector('button[aria-label="Enable narration"]');
@@ -57,59 +63,78 @@
   }
 
   if (document.readyState === 'complete') {
-    tryStartStory();
+    tryAutoStart();
   } else {
-    window.addEventListener('DOMContentLoaded', tryStartStory);
-    window.addEventListener('load', tryStartStory);
+    window.addEventListener('DOMContentLoaded', tryAutoStart);
+    window.addEventListener('load', tryAutoStart);
   }
-  const intervals = [50, 150, 300, 600, 1000, 1500, 2500];
-  intervals.forEach(t => setTimeout(tryStartStory, t));
+  const intervals = [100, 300, 800, 1500];
+  intervals.forEach(t => setTimeout(tryAutoStart, t));
 
-  window.addEventListener('pointerdown', tryStartStory, { passive: true });
-  window.addEventListener('click', tryStartStory, { passive: true });
-  window.addEventListener('keydown', tryStartStory, { passive: true });
+  window.addEventListener('pointerdown', () => { hasStartedStory = true; }, { passive: true });
+  window.addEventListener('click', () => { hasStartedStory = true; }, { passive: true });
+  window.addEventListener('keydown', () => { hasStartedStory = true; }, { passive: true });
 
   window.addEventListener('message', (e) => {
     if (e.data && (e.data.action === 'play' || e.data.start)) {
-      tryStartStory();
+      tryAutoStart();
     }
   });
 
-  let notified = false;
   function notifyFinish() {
-    if (notified) return;
-    notified = true;
-    console.log('[QUANTA_CAT] 6th slide finished! Triggering 3D Inspection Deck transition within 1 second...');
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({ action: 'finish', slide: 6, chapter: 6 }, '*');
-    }
+    if (chapter6Completed) return;
+    chapter6Completed = true;
+    console.log('[QUANTA_CAT] All 6 slides completed! Waiting 2 seconds before transition...');
+    setTimeout(() => {
+      console.log('[QUANTA_CAT] 2 seconds elapsed. Transitioning to Stage 2: 3D Inspection Deck!');
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ action: 'finish', slide: 6, chapter: 6, finished: true }, '*');
+      }
+    }, 2000); // Exactly 2 seconds delay after 6th slide ends!
   }
 
   const completionWatcher = setInterval(() => {
     try {
-      const chapterNum = document.querySelector('.chapter-number');
-      const isChapter6 = chapterNum && chapterNum.textContent && chapterNum.textContent.includes('06');
       const playBtn = document.querySelector('.play-button');
-      const isPlayStory = playBtn && playBtn.getAttribute('aria-label') === 'Play story';
+      const isCurrentlyPlaying = playBtn && playBtn.getAttribute('aria-label') === 'Pause story';
+      if (isCurrentlyPlaying) {
+        hasStartedStory = true;
+      }
 
-      const tabs = document.querySelectorAll('.chapter-tab');
-      const lastTab = tabs && tabs.length >= 6 ? tabs[5] : null;
-      let scaleVal = 0;
-      if (lastTab) {
-        const trackSpan = lastTab.querySelector('.track span');
-        if (trackSpan && trackSpan.style && trackSpan.style.transform) {
-          const m = trackSpan.style.transform.match(/scaleX\(([0-9.]+)\)/);
-          if (m) scaleVal = parseFloat(m[1]);
+      // Check chapter number: ONLY chapter 6 starts with "06" (e.g. "06/ 06")
+      const chapterNum = document.querySelector('.chapter-number');
+      const chapterTxt = chapterNum ? chapterNum.textContent.trim() : '';
+      const isSlide6 = /^0?6\s*\//.test(chapterTxt);
+
+      if (isSlide6) {
+        reachedChapter6 = true;
+        if (isCurrentlyPlaying) {
+          chapter6WasPlaying = true;
         }
       }
-      const isLastTabDone = lastTab && (lastTab.classList.contains('complete') || scaleVal >= 0.95 || (lastTab.classList.contains('active') && isPlayStory));
 
-      // As soon as Chapter 6 finishes, notify parent within 1 second (< 200ms)
-      if (isChapter6 && (isPlayStory || isLastTabDone)) {
-        clearInterval(completionWatcher);
-        notifyFinish();
+      // ONLY after reaching Chapter 6 and finishing reading/listening:
+      if (reachedChapter6 && !chapter6Completed) {
+        const tabs = document.querySelectorAll('.chapter-tab');
+        const lastTab = tabs && tabs.length >= 6 ? tabs[5] : null;
+        let scaleVal = 0;
+        if (lastTab) {
+          const trackSpan = lastTab.querySelector('.track span');
+          if (trackSpan && trackSpan.style && trackSpan.style.transform) {
+            const m = trackSpan.style.transform.match(/scaleX\(([0-9.]+)\)/);
+            if (m) scaleVal = parseFloat(m[1]);
+          }
+        }
+        const isLastTabDone = lastTab && (lastTab.classList.contains('complete') || scaleVal >= 0.98);
+        const playBtnStopped = chapter6WasPlaying && playBtn && playBtn.getAttribute('aria-label') === 'Play story';
+
+        // Slide 6 is finished:
+        if (isLastTabDone || playBtnStopped) {
+          clearInterval(completionWatcher);
+          notifyFinish();
+        }
       }
     } catch (e) {}
-  }, 100);
+  }, 200);
 })();
 </script></body></html>

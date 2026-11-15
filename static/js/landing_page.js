@@ -139,17 +139,12 @@ class LandingPageController {
   startStoryNarrationFlow() {
     this.stopStoryNarrationFlow();
 
-    // Trigger video/narration playback inside the Netlify app
+    // Trigger video/narration playback inside the story app
     this.triggerIframeNarration();
 
-    // When the full 6/6 slides narration presentation concludes,
-    // automatically transition the user directly to the 3D Inspection Deck.
-    this.storyNarrationTimer = setTimeout(() => {
-      if (this.isGuideActive) {
-        console.log('[QUANTA_CAT] Story narration 6/6 finished. Auto-advancing to Stage 2: 3D Inspection Deck...');
-        this.advanceToDeck();
-      }
-    }, this.storyNarrationDuration);
+    // The user reads through all 6 slides.
+    // The story engine detects completion of slide 6/6 and, after exactly 2 seconds,
+    // posts the finish message to smoothly transition to Stage 2: 3D Inspection Deck.
   }
 
   stopStoryNarrationFlow() {
@@ -313,11 +308,6 @@ class LandingPageController {
           d.type === 'finish' ||
           d.type === 'complete' ||
           d.type === 'story_complete' ||
-          d.slide === 6 ||
-          d.chapter === 6 ||
-          d.currentSlide === 6 ||
-          d.currentChapter === 6 ||
-          d.currentIndex === 5 ||
           d.finished === true
         ) {
           console.log('[QUANTA_CAT] Received story finish event from Netlify iframe. Advancing to 3D deck...');
