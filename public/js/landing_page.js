@@ -1,17 +1,39 @@
 /**
- * Space Archaeologists - 3D Inspection Deck Landing Page Controller
- * Handles the tactile, animated landing experience:
- *  - QUANTA_CAT Presents corner banner & interactive chime
- *  - 3D Model Viewer with orbit controls & preset camera angles (Orbit, Front, Top, Macro)
- *  - Dynamic Telemetry Specs HUD (coordinates, touchdown epoch, archaeological role)
- *  - Relic selector pills (Apollo LM, Perseverance, Ingenuity, Viking, Opportunity)
- *  - Big 3D Red Button ("ENTER THE SPACE MAP") with sound & warp transition
- *  - Interactive mouse parallax on starfield and cosmic grid
- *  - Smooth navigation to Manifesto & QUANTA_CAT Mission Crew sections
+ * Space Archaeologists - 3-Stage Mission Flow Controller
+ * Seamlessly chains:
+ *  - STAGE 1: QUANTA_CAT Mission Storytelling Guide (Netlify App)
+ *             Automatic timed transition + interactive chapters + manual advance / pause
+ *  - STAGE 2: 3D Inspection Deck Landing Page
+ *             "QUANTA_CAT presents ......" corner banner & interactive chime
+ *             3D Model Viewer with orbit controls & preset camera angles (Orbit, Front, Top, Macro)
+ *             Dynamic Telemetry Specs HUD (coordinates, epoch, archaeological role)
+ *             Big 3D Red Button ("ENTER THE SPACE MAP") with sound & warp transition
+ *             Team QUANTA_CAT dossier featuring Varnit Sharma (Lead Dev)
+ *  - STAGE 3: Main Space Map (Solar System Navigator & Lunar/Martian Trek surfaces)
  */
 
 class LandingPageController {
   constructor() {
+    // Stage 1: Netlify Storytelling Guide elements
+    this.guideStage = document.getElementById('netlify-guide-stage');
+    this.btnProceedDeck = document.getElementById('btn-proceed-to-deck');
+    this.btnSkipMapDirect = document.getElementById('btn-skip-to-map-direct');
+    this.guideProgressBar = document.getElementById('guide-progress-bar');
+    this.guideCountdownSecs = document.getElementById('guide-countdown-seconds');
+    this.btnGuideToggleTimer = document.getElementById('btn-guide-toggle-timer');
+    this.guideTimerIcon = document.getElementById('guide-timer-icon');
+    this.btnTopStoryGuide = document.getElementById('btn-top-story-guide');
+    this.btnOpenStoryGuide = document.getElementById('btn-open-story-guide');
+    this.guideIframe = document.getElementById('netlify-story-iframe');
+
+    // Stage 1 Auto-advance Timer State
+    this.timerDuration = 14; // seconds for mission storytelling intro
+    this.timerRemaining = 14;
+    this.timerInterval = null;
+    this.isTimerPaused = false;
+    this.isGuideActive = true;
+
+    // Stage 2: 3D Inspection Deck elements
     this.screen = document.getElementById('landing-screen');
     this.enterBtn = document.getElementById('btn-enter-space-map');
     this.skipLink = document.getElementById('landing-skip-link');
@@ -32,7 +54,7 @@ class LandingPageController {
     this.telRole = document.getElementById('tel-role');
 
     this.audioCtx = null;
-    this.isOpen = true;
+    this.isOpen = false;
     this.isAutoRotating = true;
 
     // Relic Telemetry Metadata Matrix
@@ -78,12 +100,26 @@ class LandingPageController {
   }
 
   init() {
-    if (!this.screen) return;
-
-    // Check URL parameters or hash
     const hash = window.location.hash.toLowerCase();
+
+    // Check entry route
     if (hash === '#map' || hash === '#solar' || hash === '#moon' || hash === '#mars') {
-      this.close(true); // immediate close without transition
+      // Direct jump to Space Map
+      this.closeStoryGuide(true);
+      this.close(true);
+    } else if (hash === '#deck' || hash === '#inspection') {
+      // Direct jump to 3D Inspection Deck
+      this.closeStoryGuide(true);
+      this.open();
+    } else {
+      // Default: Start in Stage 1 (Netlify Storytelling Guide)
+      if (this.guideStage) {
+        this.guideStage.classList.add('active');
+        this.guideStage.style.display = 'flex';
+        this.startGuideTimer();
+      } else {
+        this.open();
+      }
     }
 
     this.bindEvents();
@@ -91,8 +127,168 @@ class LandingPageController {
     this.exposeGlobalAPI();
   }
 
+  /* ---------------- STAGE 1: NETLIFY STORY GUIDE METHODS ---------------- */
+
+  startGuideTimer() {
+    this.stopGuideTimer();
+    this.timerRemaining = this.timerDuration;
+    this.isTimerPaused = false;
+    this.updateTimerUI();
+
+    this.timerInterval = setInterval(() => {
+      if (this.isTimerPaused) return;
+
+      this.timerRemaining -= 0.1;
+      if (this.timerRemaining <= 0) {
+        this.timerRemaining = 0;
+        this.updateTimerUI();
+        this.stopGuideTimer();
+        this.advanceToDeck();
+      } else {
+        this.updateTimerUI();
+      }
+    }, 100);
+  }
+
+  stopGuideTimer() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+  }
+
+  toggleGuideTimer() {
+    this.isTimerPaused = !this.isTimerPaused;
+    if (this.guideTimerIcon) {
+      this.guideTimerIcon.textContent = this.isTimerPaused ? '▶️' : '⏸️';
+    }
+    const label = document.getElementById('guide-timer-label');
+    if (label && this.isTimerPaused) {
+      label.innerHTML = `<span>Timer paused</span>`;
+    } else {
+      this.updateTimerUI();
+    }
+    this.playBlipSound(480);
+  }
+
+  updateTimerUI() {
+    if (this.guideCountdownSecs) {
+      this.guideCountdownSecs.textContent = Math.ceil(this.timerRemaining);
+    }
+    if (this.guideProgressBar) {
+      const pct = Math.min(100, Math.max(0, ((this.timerDuration - this.timerRemaining) / this.timerDuration) * 100));
+      this.guideProgressBar.style.width = `${pct}%`;
+    }
+    const label = document.getElementById('guide-timer-label');
+    if (label && !this.isTimerPaused) {
+      label.innerHTML = `Auto-advancing to 3D Deck in <strong>${Math.ceil(this.timerRemaining)}</strong>s`;
+    }
+  }
+
+  advanceToDeck() {
+    this.stopGuideTimer();
+    this.playQuantaChime();
+
+    if (this.guideStage) {
+      this.guideStage.classList.add('dismissing');
+      setTimeout(() => {
+        this.guideStage.classList.remove('active', 'dismissing');
+        this.guideStage.style.display = 'none';
+        this.isGuideActive = false;
+        this.open();
+      }, 550);
+    } else {
+      this.open();
+    }
+  }
+
+  advanceToMap() {
+    this.stopGuideTimer();
+    this.playEnterSound();
+
+    if (this.guideStage) {
+      this.guideStage.classList.add('dismissing');
+      setTimeout(() => {
+        this.guideStage.classList.remove('active', 'dismissing');
+        this.guideStage.style.display = 'none';
+        this.isGuideActive = false;
+      }, 500);
+    }
+    this.close(true);
+  }
+
+  closeStoryGuide(immediate = false) {
+    this.stopGuideTimer();
+    if (!this.guideStage) return;
+    this.isGuideActive = false;
+    this.guideStage.classList.remove('active', 'dismissing');
+    this.guideStage.style.display = 'none';
+  }
+
+  openStoryGuide() {
+    if (!this.guideStage) return;
+
+    // Pause timer so user can browse stories without rush
+    this.stopGuideTimer();
+    this.isTimerPaused = true;
+    if (this.guideTimerIcon) this.guideTimerIcon.textContent = '▶️';
+    const label = document.getElementById('guide-timer-label');
+    if (label) label.innerHTML = `<span>Interactive Mode Active</span>`;
+    if (this.guideProgressBar) this.guideProgressBar.style.width = '100%';
+
+    // Hide stage 2 if open
+    if (this.screen) {
+      this.screen.classList.remove('active', 'dismissing');
+      this.screen.style.display = 'none';
+      this.isOpen = false;
+    }
+
+    this.guideStage.style.display = 'flex';
+    void this.guideStage.offsetWidth;
+    this.guideStage.classList.remove('dismissing');
+    this.guideStage.classList.add('active');
+    this.isGuideActive = true;
+    document.body.style.overflow = 'hidden';
+
+    this.playBlipSound(600);
+
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, '#story');
+    }
+  }
+
+  /* ---------------- STAGE 2: 3D INSPECTION DECK METHODS ---------------- */
+
   bindEvents() {
-    // 1. Enter Space Map Action
+    // 0. Stage 1 Guide Actions
+    if (this.btnProceedDeck) {
+      this.btnProceedDeck.addEventListener('click', () => this.advanceToDeck());
+    }
+    if (this.btnSkipMapDirect) {
+      this.btnSkipMapDirect.addEventListener('click', () => this.advanceToMap());
+    }
+    if (this.btnGuideToggleTimer) {
+      this.btnGuideToggleTimer.addEventListener('click', () => this.toggleGuideTimer());
+    }
+    if (this.btnTopStoryGuide) {
+      this.btnTopStoryGuide.addEventListener('click', () => this.openStoryGuide());
+    }
+    if (this.btnOpenStoryGuide) {
+      this.btnOpenStoryGuide.addEventListener('click', () => this.openStoryGuide());
+    }
+
+    // Cross-origin safe message listener from Netlify storytelling iframe
+    window.addEventListener('message', (event) => {
+      try {
+        if (!event.data) return;
+        const d = event.data;
+        if (d.action === 'finish' || d.action === 'complete' || d.action === 'explore' || d.type === 'story_complete') {
+          this.advanceToDeck();
+        }
+      } catch (e) {}
+    });
+
+    // 1. Enter Space Map Action (Big Red Button)
     if (this.enterBtn) {
       this.enterBtn.addEventListener('click', () => {
         this.playEnterSound();
@@ -108,12 +304,13 @@ class LandingPageController {
       });
     }
 
-    // 2. Keyboard shortcut: Enter or Space launches map
+    // 2. Keyboard shortcut: Enter launches map from Deck
     window.addEventListener('keydown', (e) => {
       if (!this.isOpen) return;
       if (document.getElementById('story-mode-modal')?.classList.contains('active') ||
           document.getElementById('interactive-lab-modal')?.classList.contains('active') ||
-          document.getElementById('forgotten-explorers-modal')?.classList.contains('active')) {
+          document.getElementById('forgotten-explorers-modal')?.classList.contains('active') ||
+          document.getElementById('quanta-team-modal')?.classList.contains('active')) {
         return;
       }
 
@@ -189,7 +386,7 @@ class LandingPageController {
       heroTeamStrip.addEventListener('click', openTeamDossier);
     }
 
-    // Escape closes team modal if active
+    // Escape closes modals or guides
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         const modal = document.getElementById('quanta-team-modal');
@@ -222,7 +419,6 @@ class LandingPageController {
   initParallax() {
     if (!this.screen || !this.nebulaGlow || !this.starsBg) return;
 
-    // Subtle 3D mouse parallax on landing cosmic background
     this.screen.addEventListener('mousemove', (e) => {
       const xNorm = (e.clientX / window.innerWidth) - 0.5;
       const yNorm = (e.clientY / window.innerHeight) - 0.5;
@@ -266,6 +462,8 @@ class LandingPageController {
   exposeGlobalAPI() {
     window.openLandingPage = () => this.open();
     window.closeLandingPage = () => this.close();
+    window.openStoryGuide = () => this.openStoryGuide();
+    window.advanceToDeck = () => this.advanceToDeck();
     window.landingPage = this;
   }
 

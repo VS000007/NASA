@@ -41,26 +41,36 @@ server.listen(8099, async () => {
   try {
     // Check root index.html
     const resHtml = await httpGet('http://localhost:8099/');
-    const hasQuanta = resHtml.data.includes('QUANTA_CAT presents ......');
+    const hasNetlifyStage = resHtml.data.includes('id="netlify-guide-stage"');
+    const hasNetlifyUrl = resHtml.data.includes('https://storytelling-app-a344bb.netlify.app/');
+    const hasProceedBtn = resHtml.data.includes('id="btn-proceed-to-deck"');
+    const hasStoryGuideBtn = resHtml.data.includes('btn-open-story-guide');
+    const hasQuanta = resHtml.data.includes('quanta-brand') && resHtml.data.includes('presents ......');
     const hasVarnit = resHtml.data.includes('Varnit Sharma');
     const hasHeroStrip = resHtml.data.includes('landing-team-hero-card');
     const hasModal = resHtml.data.includes('quanta-team-modal');
     const hasAvatar = resHtml.data.includes('avatar_varnit.svg');
 
     console.log('Verification Results:');
-    console.log('- Contains QUANTA_CAT presents ...... Banner:', hasQuanta);
-    console.log('- Contains Lead Varnit Sharma:', hasVarnit);
-    console.log('- Contains Hero Team Strip:', hasHeroStrip);
-    console.log('- Contains Team Dossier Modal:', hasModal);
-    console.log('- Contains Varnit Avatar:', hasAvatar);
+    console.log('- Stage 1: Netlify Guide Stage Present:', hasNetlifyStage);
+    console.log('- Stage 1: Netlify URL Embedded:', hasNetlifyUrl);
+    console.log('- Stage 1: Proceed to Deck Button:', hasProceedBtn);
+    console.log('- Stage 1: Re-open Story Guide in HUD:', hasStoryGuideBtn);
+    console.log('- Stage 2: QUANTA_CAT presents ...... Banner:', hasQuanta);
+    console.log('- Stage 2: Lead Varnit Sharma Mentioned:', hasVarnit);
+    console.log('- Stage 2: Hero Team Strip:', hasHeroStrip);
+    console.log('- Stage 2: Team Dossier Modal:', hasModal);
+    console.log('- Stage 2: Varnit Avatar SVG:', hasAvatar);
 
-    // Check SVG Avatar
-    const resAvatar = await httpGet('http://localhost:8099/images/team/avatar_varnit.svg');
-    console.log('- Avatar Varnit status:', resAvatar.status);
+    // Check CSS
+    const resCss = await httpGet('http://localhost:8099/css/style.css');
+    const hasNetlifyCss = resCss.data.includes('.netlify-guide-stage');
+    console.log('- CSS contains .netlify-guide-stage:', hasNetlifyCss);
 
     // Check JS controller
     const resJs = await httpGet('http://localhost:8099/js/landing_page.js');
-    console.log('- Landing Page JS status:', resJs.status);
+    const hasAdvanceMethods = resJs.data.includes('advanceToDeck') && resJs.data.includes('openStoryGuide');
+    console.log('- JS contains 3-stage transitions:', hasAdvanceMethods);
 
     server.close();
     process.exit(0);

@@ -23,12 +23,56 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 
   <!-- Main Styling -->
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/style.css?v=quanta2026_4">
 </head>
 <body>
 
+  <!-- ================= STAGE 1: NETLIFY MISSION STORYTELLING GUIDE ================= -->
+  <section id="netlify-guide-stage" class="netlify-guide-stage active" aria-label="QUANTA_CAT Mission Storytelling Guide">
+    <!-- Top Floating HUD Bar for Storytelling Guide -->
+    <header class="guide-hud-bar">
+      <div class="guide-brand-tag">
+        <span class="guide-cat-badge">🐱⚡ QUANTA_CAT</span>
+        <span class="guide-stage-tag">Stage 1 of 3: Mission Story Guide</span>
+      </div>
+
+      <div class="guide-auto-advance-wrap" id="guide-auto-advance-wrap" title="Auto-advances to 3D Inspection Deck. Click pause/play anytime.">
+        <div class="guide-timer-indicator">
+          <span class="guide-pulse-orb"></span>
+          <span id="guide-timer-label">Auto-advancing to 3D Deck in <strong id="guide-countdown-seconds">12</strong>s</span>
+        </div>
+        <div class="guide-progress-track">
+          <div id="guide-progress-bar" class="guide-progress-bar"></div>
+        </div>
+        <button id="btn-guide-toggle-timer" class="guide-timer-control" title="Pause / Resume auto-advance countdown">
+          <span id="guide-timer-icon">⏸️</span>
+        </button>
+      </div>
+
+      <div class="guide-hud-actions">
+        <button id="btn-proceed-to-deck" class="btn-guide-proceed" title="Advance to Stage 2: 3D Inspection Deck">
+          <span>Enter 3D Inspection Deck &rarr;</span>
+        </button>
+        <button id="btn-skip-to-map-direct" class="btn-guide-skip" title="Directly launch Stage 3: Interactive Space Map">
+          <span>Space Map ⚡</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Embedded Netlify Storytelling Application -->
+    <div class="guide-iframe-container">
+      <iframe
+        id="netlify-story-iframe"
+        src="https://storytelling-app-a344bb.netlify.app/"
+        title="QUANTA_CAT Space Archaeologists Storytelling Guide"
+        allow="autoplay; encrypted-media; fullscreen"
+        loading="eager"
+      ></iframe>
+    </div>
+  </section>
+
   <!-- ================= VIEW 0: 3D INSPECTION DECK LANDING PAGE ================= -->
-  <section id="landing-screen" class="landing-screen active" aria-label="Space Archaeologists Inspection Deck Landing Page">
+  <section id="landing-screen" class="landing-screen" aria-label="Space Archaeologists Inspection Deck Landing Page">
     <!-- Starfield & Cosmic Grid Backdrop -->
     <div class="landing-cosmic-bg">
       <div class="landing-grid-overlay"></div>
@@ -58,6 +102,9 @@
         </span>
       </div>
       <div class="landing-top-actions">
+        <button id="btn-top-story-guide" class="landing-nav-link" title="Revisit Stage 1: QUANTA_CAT Mission Story Guide">
+          <span>📖</span> Story Guide
+        </button>
         <button id="btn-top-team-modal" class="landing-nav-link" title="Open Team QUANTA_CAT Dossier">
           <span>👥</span> Team Crew
         </button>
@@ -474,7 +521,10 @@
     </div>
 
     <div class="hud-actions">
-      <button id="btn-open-landing" class="btn-glass btn-deck-glow" onclick="window.openLandingPage()" title="Return to 3D Inspection Deck & Landing Page">
+      <button id="btn-open-story-guide" class="btn-glass btn-story-guide-glow" onclick="window.landingPage && window.landingPage.openStoryGuide()" title="Revisit Stage 1: QUANTA_CAT Mission Story Guide">
+        <span>📖</span> Story Guide
+      </button>
+      <button id="btn-open-landing" class="btn-glass btn-deck-glow" onclick="window.openLandingPage()" title="Return to Stage 2: 3D Inspection Deck">
         <span>🛰️</span> Inspection Deck
       </button>
       <button id="btn-explore-moon" class="btn-glass btn-moon" title="Jump to the Moon">
@@ -836,7 +886,7 @@
   <script src="/js/interactive_lab.js"></script>
   <script src="/js/guided_tour.js"></script>
   <script src="/js/forgotten_explorers.js"></script>
-  <script src="/js/landing_page.js"></script>
+  <script src="/js/landing_page.js?v=quanta2026_4"></script>
 
 </body>
 </html>
