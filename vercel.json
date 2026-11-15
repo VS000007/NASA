@@ -15,11 +15,7 @@
       "destination": "/credits.html"
     },
     {
-      "source": "/story",
-      "destination": "/story/index.html"
-    },
-    {
-      "source": "/((?!api/|css/|js/|models/|data/|images/|assets/|story/|favicon|credits|.*\\..*).*)",
+      "source": "/((?!api/|css/|js/|models/|data/|images/|favicon|credits|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]

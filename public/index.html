@@ -23,13 +23,13 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 
   <!-- Main Styling -->
-  <link rel="stylesheet" href="/css/style.css?v=quanta2026_8">
+  <link rel="stylesheet" href="/css/style.css?v=quanta2026_9">
 </head>
 <body>
 
   <!-- ================= STAGE 1: NETLIFY MISSION STORYTELLING GUIDE ================= -->
   <section id="netlify-guide-stage" class="netlify-guide-stage active" aria-label="QUANTA_CAT Mission Storytelling Guide">
-    <!-- Top Floating HUD Bar for Storytelling Guide (Clean header, no progress/timer bar) -->
+    <!-- Top Floating HUD Bar for Storytelling Guide -->
     <header class="guide-hud-bar">
       <div class="guide-brand-tag">
         <span class="guide-cat-badge">🐱⚡ QUANTA_CAT presents ......</span>
@@ -43,13 +43,13 @@
       </div>
     </header>
 
-    <!-- Embedded High-Reliability Same-Origin Storytelling Application with Instant Autoplay & Narration -->
+    <!-- Embedded Netlify Storytelling Application -->
     <div class="guide-iframe-container">
       <iframe
         id="netlify-story-iframe"
-        src="/story/index.html?autoplay=1&narration=1"
+        src="https://storytelling-app-a344bb.netlify.app/"
         title="QUANTA_CAT Space Archaeologists Storytelling Guide"
-        allow="autoplay *; microphone *; camera *; encrypted-media *; fullscreen *"
+        allow="autoplay; encrypted-media; fullscreen; microphone"
         loading="eager"
       ></iframe>
     </div>
@@ -673,7 +673,7 @@
   <script src="/js/interactive_lab.js"></script>
   <script src="/js/guided_tour.js"></script>
   <script src="/js/forgotten_explorers.js"></script>
-  <script src="/js/landing_page.js?v=quanta2026_8"></script>
+  <script src="/js/landing_page.js?v=quanta2026_9"></script>
 
 </body>
 </html>

@@ -43,17 +43,10 @@ server.listen(8099, async () => {
     const resHtml = await httpGet('http://localhost:8099/');
     const hasNetlifyStage = resHtml.data.includes('id="netlify-guide-stage"');
     const hasStoryIframe = resHtml.data.includes('id="netlify-story-iframe"') && 
-                           (resHtml.data.includes('/story/index.html') || resHtml.data.includes('storytelling-app-a344bb.netlify.app'));
+                           resHtml.data.includes('https://storytelling-app-a344bb.netlify.app/');
     const hasProceedBtn = resHtml.data.includes('id="btn-proceed-to-deck"');
     const hasStoryGuideBtn = resHtml.data.includes('btn-open-story-guide');
     const hasQuanta = resHtml.data.includes('quanta-brand') && resHtml.data.includes('presents ......');
-
-    // Test fetching /story/index.html
-    const resStory = await httpGet('http://localhost:8099/story/index.html');
-    const hasStoryAutoBridge = resStory.status === 200 && 
-                               resStory.data.includes('tryStartStory') && 
-                               resStory.data.includes('listen-button') &&
-                               resStory.data.includes('postMessage');
 
     // 5 Team Members Verification
     const hasVarnit = resHtml.data.includes('Varnit Sharma') && resHtml.data.includes('@quanta_cat');
@@ -81,16 +74,13 @@ server.listen(8099, async () => {
 
     // Stage 1 Auto-Play & Timer Bar Removal checks
     const hasNoTimerBar = !resHtml.data.includes('guide-auto-advance-wrap');
-    const hasAutoplayParams = resHtml.data.includes('autoplay=1') && resHtml.data.includes('narration=1');
 
     console.log('Verification Results:');
     console.log('- Stage 1: Netlify Guide Stage Present:', hasNetlifyStage);
-    console.log('- Stage 1: Story Iframe Present & Configured:', hasStoryIframe);
-    console.log('- Stage 1: Local Story Auto-Bridge Active (same-origin):', hasStoryAutoBridge);
+    console.log('- Stage 1: Netlify App URL Embedded (No 404):', hasStoryIframe);
     console.log('- Stage 1: Proceed to Deck Button:', hasProceedBtn);
     console.log('- Stage 1: Re-open Story Guide in HUD:', hasStoryGuideBtn);
     console.log('- Stage 1: Timer bar completely removed:', hasNoTimerBar);
-    console.log('- Stage 1: Autoplay & Narration parameters active:', hasAutoplayParams);
     console.log('- Stage 2: QUANTA_CAT presents ...... Banner:', hasQuanta);
     console.log('- 3D Model Old Selector Bar Removed:', hasNoOldSelectorBar);
     console.log('- 3D Model 4s Auto-Slide Indicator Added:', hasSlideIndicator);
